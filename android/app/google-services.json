@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "620516344876",
+    "firebase_url": "https://luggin-firebase.firebaseio.com",
+    "project_id": "luggin-firebase",
+    "storage_bucket": "luggin-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620516344876:android:f8a5899801194bbc647d89",
+        "android_client_info": {
+          "package_name": "com.lugginteam.innov237"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620516344876-mm7pnsp63dlcnbgdem1s4n9tp5ncctk1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lugginteam.innov237",
+            "certificate_hash": "6f8d01d41114ea484ca7d01b1ec5290af3e4038b"
+          }
+        },
+        {
+          "client_id": "620516344876-9iqau58r5hqg3aevd5ma6884tat70hoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPIFzCOM7WZCOWUc6MzG25DlIPvF-Hc9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620516344876-9iqau58r5hqg3aevd5ma6884tat70hoq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
