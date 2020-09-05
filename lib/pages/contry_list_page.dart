@@ -39,6 +39,7 @@ class _ContryListPageState extends State<ContryListPage> {
               color: Color(0xFF2488B9),
               child: Row(
                 children: <Widget>[
+                  SizedBox(width:8.0),
                   InkWell(
                     onTap: () => Navigator.pop(context),
                     child: Icon(

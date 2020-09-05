@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/screens/payment_screen.dart';
+import 'package:luggin/pages/user_profil_detail_page.dart';
+import 'package:luggin/screens/payment_method_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'dart:convert';
 import 'package:luggin/services/http_service.dart';
@@ -34,6 +35,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   _ChatRoomPageState(this.requestData);
 
   var conversationData = [];
+  Timer _timeDilationTimer;
 
   @override
   void initState() {
@@ -67,6 +69,19 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       Duration(seconds: 1),
       () => _scrollEnd(),
     );
+
+    _timeDilationTimer = Timer.periodic(
+      Duration(seconds: 5),
+      (Timer t) {
+        loardMessage();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timeDilationTimer?.cancel();
+    super.dispose();
   }
 
   _scrollListener() {
@@ -154,6 +169,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
     if (response['success']) {
       print('ok');
+      setState(() {
+        conversationData = response['data'];
+      });
       _scrollEnd();
     } else {
       print('err');
@@ -178,7 +196,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       'price_delivery': requestData['tripData']['offeredKilosPriceTrip'],
     };
     _openPage(
-      PaymentScreen(requestData: postData),
+      PaymentMethodScreen(requestData: postData),
     );
   }
 
@@ -230,7 +248,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       });
     } else {
       print("je suis celui qui envoi");
-      
+
       var postData = {
         'idTripOrIdexpedition': requestData['idTripOrIdexpedition'],
         'isTripOrExpedition': requestData['isTripOrExpedition'].toString(),
@@ -252,8 +270,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       }
 
       print(postData);
+      _messageController.text = "accepted";
+      _sendMessage('text');
       _openPage(
-        PaymentScreen(requestData: postData),
+        PaymentMethodScreen(requestData: postData),
       );
     }
   }
@@ -262,6 +282,18 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     setState(() {
       _messageController.text = "refused";
       _sendMessage('text');
+    });
+  }
+
+  loardMessage() async {
+    var response = await httpService.getPostByKey(
+      "getConversationMessage",
+      requestData['idConversation'],
+    );
+
+    setState(() {
+      conversationData = response;
+      print(conversationData);
     });
   }
 
@@ -399,17 +431,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        Center(
+                        Align(
+                          alignment: Alignment.bottomRight,
                           child: SizedBox(
-                            width: 50.0,
-                            height: 50.0,
+                            width: 60.0,
+                            height: 40.0,
                             child: RaisedButton(
                               elevation: 0.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20.0),
-                                ),
-                              ),
                               onPressed: () {
                                 setState(() {
                                   _sendProposal();
@@ -446,39 +474,76 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       color: Palette.primaryColor,
                       child: Column(
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () => Navigator.pop(context),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
+                          Container(
+                            child: GestureDetector(
+                              onTap: () => _openPage(
+                                UserProfilDetails(
+                                  responseData: requestData['userData'],
                                 ),
                               ),
-                              SizedBox(
-                                width: 2.0,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      InkWell(
+                                        onTap: () => Navigator.pop(context),
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2.0,
+                                      ),
+                                      CircleAvatar(
+                                        backgroundColor: Colors.black12,
+                                        backgroundImage: NetworkImage(
+                                          imageApiUrl +
+                                              'storage/' +
+                                              requestData['userData']['avatar'],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            requestData['userData']['pseudo'],
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            requestData['userData']['city'] !=
+                                                    null
+                                                ? requestData['userData']
+                                                    ['city']
+                                                : "",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12.0,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Icon(
+                                    Icons.more,
+                                    color: Colors.white,
+                                  ),
+                                ],
                               ),
-                              CircleAvatar(
-                                backgroundColor: Colors.black12,
-                                backgroundImage: NetworkImage(
-                                  imageApiUrl +
-                                      'storage/' +
-                                      requestData['userData']['avatar'],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text(
-                                requestData['userData']['pseudo'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20.0,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -494,6 +559,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             children: <Widget>[
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -505,13 +571,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                                     ['cityDepartureTrip'] !=
                                                 null
                                             ? requestData['tripData']
-                                                    ['cityDepartureTrip']
-                                                .replaceRange(
-                                                    10,
-                                                    requestData['tripData'][
-                                                            'cityDepartureTrip']
-                                                        .length,
-                                                    '...')
+                                                ['cityDepartureTrip']
                                             : requestData['tripData']
                                                 ['cityDepartureParcel'],
                                         style: TextStyle(
@@ -812,18 +872,21 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text(
-                conversationData[index]['proposalKilos'].toString() +
-                    " Kg" +
-                    " - " +
-                    conversationData[index]['proposalPrice'].toString() +
-                    "€",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400,
+              if (conversationData[index]['proposalKilos'] != null &&
+                  conversationData[index]['proposalPrice'] != null) ...[
+                Text(
+                  conversationData[index]['proposalKilos'].toString() +
+                      " Kg" +
+                      " - " +
+                      conversationData[index]['proposalPrice'].toString() +
+                      "€",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
+              ],
               SizedBox(
                 height: 10.0,
               ),

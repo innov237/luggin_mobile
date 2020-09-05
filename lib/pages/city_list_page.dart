@@ -10,7 +10,7 @@ class CityListPage extends StatefulWidget {
 class _CityListPageState extends State<CityListPage> {
   List serverData;
   List filterData;
-  String apiUrl = AppEvironement.apiUrlDev;
+  String apiUrl = AppEvironement.apiUrl;
 
   getAllCity() async {
     Dio dio = Dio();

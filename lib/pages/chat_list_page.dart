@@ -69,7 +69,7 @@ class _ChatListPageState extends State<ChatListPage> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
-                  "Chat list",
+                  "Messages",
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,

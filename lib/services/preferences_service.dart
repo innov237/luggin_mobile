@@ -24,4 +24,5 @@ class PreferenceStorage {
     sharedPreferences.remove(key);
     return true;
   }
+
 }

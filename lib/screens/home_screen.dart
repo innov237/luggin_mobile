@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setText());
+    timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setText());
   }
 
   void setText() {
@@ -41,6 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex = 0;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override

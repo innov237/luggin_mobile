@@ -38,7 +38,9 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
 
   _getUserReviews() async {
     var postData = {
-      'userId': responseData['idUser'] !=null ? responseData['idUser'] : responseData['id'] ,
+      'userId': responseData['idUser'] != null
+          ? responseData['idUser']
+          : responseData['id'],
     };
     var response = await httpService.getPostByKey("getUserReviews", postData);
     print(response);
@@ -49,6 +51,15 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
     String formattedDate =
         DateFormat('yyyy/MM/dd HH:mm').format(DateTime.parse(timestamp));
     return formattedDate;
+  }
+
+  getuserStat() async {
+    var userId = responseData['idUser'] != null
+        ? responseData['idUser']
+        : responseData['id'];
+    var response = await httpService.getPostByKey("getuserStat", userId);
+
+    return response;
   }
 
   @override
@@ -115,7 +126,7 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
                                           responseData['userId_isVerified'] ==
                                                   'true'
                                               ? Colors.green
-                                              : Colors.red,
+                                              : Colors.black12,
                                     ),
                                   ),
                                 ),
@@ -170,88 +181,114 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "0",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 6.0,
-                                    ),
-                                    Text(
-                                      "Trips Proposal",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "0",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 6.0,
-                                    ),
-                                    Text(
-                                      "Delivery Request",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
+                          FutureBuilder(
+                            future: getuserStat(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapShot) {
+                              return snapShot.hasData
+                                  ? Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceAround,
                                       children: <Widget>[
-                                        Text(
-                                          "0",
-                                          style: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.7),
+                                        Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Text(
+                                                snapShot
+                                                    .data['countProposalTrip']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 6.0,
+                                              ),
+                                              Text(
+                                                "Trips Proposal",
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 6.0,
+                                        Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Text(
+                                                snapShot.data[
+                                                        'countDeliveryRequest']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 6.0,
+                                              ),
+                                              Text(
+                                                "Delivery Request",
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        Icon(
-                                          Icons.star,
-                                          color: Color(0xFFFFA618),
-                                          size: 15.0,
+                                        Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: Color(0xFFFFA618),
+                                                    size: 15.0,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.0,
+                                                  ),
+                                                  Text(
+                                                    snapShot.data['countReview']
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.7),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Text(
+                                                "Reviews",
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         )
                                       ],
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      "Reviews",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
+                                    )
+                                  : Container(
+                                      height: 15.0,
+                                      width: 15.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                    );
+                            },
                           ),
                           SizedBox(
                             height: 5.0,
@@ -459,8 +496,13 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: <Widget>[
-                                                      Text(snapShot.data[index]
-                                                          ['pseudo']),
+                                                      Text(
+                                                        snapShot.data[index]
+                                                            ['pseudo'],
+                                                        style: TextStyle(
+                                                          fontSize: 15.0,
+                                                        ),
+                                                      ),
                                                       SizedBox(
                                                         height: 1.0,
                                                       ),
@@ -479,20 +521,55 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                  top: 5.0,
-                                                  left: 50.0,
+                                                  top: 10.0,
+                                                  left: 43.0,
                                                 ),
-                                                child: Text(
-                                                  snapShot.data[index]
-                                                              ['comment'] !=
-                                                          null
-                                                      ? snapShot.data[index]
-                                                          ['comment']
-                                                      : '',
-                                                  style: TextStyle(
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    if (snapShot.data[index]
+                                                            ['star'] !=
+                                                        null) ...[
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          for (var i = 0;
+                                                              i <
+                                                                  snapShot.data[
+                                                                          index]
+                                                                      ['star'];
+                                                              i++) ...[
+                                                            Icon(
+                                                              Icons.star,
+                                                              color: Color(
+                                                                  0xFFFFA618),
+                                                              size: 15.0,
+                                                            )
+                                                          ],
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        height: 3.0,
+                                                      ),
+                                                    ],
+                                                    Text(
+                                                      snapShot.data[index]
+                                                                  ['comment'] !=
+                                                              null
+                                                          ? snapShot.data[index]
+                                                              ['comment']
+                                                          : '',
+                                                      style: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                               SizedBox(
@@ -522,8 +599,8 @@ class _UserProfilDetailsState extends State<UserProfilDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Container(
-                                      height: 50.0,
-                                      width: 50.0,
+                                      height: 15.0,
+                                      width: 15.0,
                                       child: CircularProgressIndicator(),
                                     ),
                                   ),

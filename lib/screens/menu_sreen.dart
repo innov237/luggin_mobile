@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
+import 'package:luggin/pages/user_profil_detail_page.dart';
 import 'package:luggin/pages/user_profil_page.dart';
 import 'package:luggin/screens/auth/login/login_screen.dart';
 import 'package:luggin/screens/tabs_screen.dart';
@@ -225,6 +226,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: Container(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     CircleAvatar(
                                       backgroundColor: Colors.white12,
@@ -244,15 +246,40 @@ class _MenuScreenState extends State<MenuScreen> {
                                     SizedBox(
                                       width: 5.0,
                                     ),
-                                    Text(
-                                      authUserData != null
-                                          ? authUserData['pseudo']
-                                          : 'userName',
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19.0,
-                                      ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          authUserData != null
+                                              ? authUserData['pseudo']
+                                              : 'userName',
+                                          style: TextStyle(
+                                            color:
+                                                Colors.white.withOpacity(0.9),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19.0,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20.0,
+                                        ),
+                                        if (authUserData != null) ...[
+                                          if (authUserData[
+                                                  'userId_isVerified'] ==
+                                              'false') ...[
+                                            Text(
+                                              "Your Id is not verified\nclick to setting and send your ID Card",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10.0,
+                                              ),
+                                            ),
+                                          ]
+                                        ]
+                                      ],
                                     )
                                   ],
                                 ),
@@ -444,6 +471,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                       ),
                                     ),
                                     ListTile(
+                                      onTap: () => _openPage(
+                                        context,
+                                        UserProfilDetails(
+                                          responseData: authUserData,
+                                        ),
+                                      ),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
                                         children: <Widget>[
@@ -697,7 +730,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       title: Row(
                                         children: <Widget>[
                                           Image.asset(
-                                            "assets/images/setting.png",
+                                            "assets/images/log-out.png",
                                             height: 27.0,
                                           ),
                                           SizedBox(

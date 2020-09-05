@@ -170,7 +170,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                             Icons.verified_user,
                             color: responseData['userId_isVerified'] == 'true'
                                 ? Colors.green
-                                : Colors.red,
+                                : Colors.black12,
                             size: 15.0,
                           ),
                         ),
@@ -188,8 +188,9 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         Text(
                           responseData['pseudo'],
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black.withOpacity(0.7)),
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black.withOpacity(0.7),
+                          ),
                         ),
                         SizedBox(
                           height: 2.0,
@@ -205,7 +206,9 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                               width: 5.0,
                             ),
                             Text(
-                              "3.5",
+                              responseData['star'] != null
+                                  ? responseData['star'].toString()
+                                  : '0',
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black.withOpacity(0.7)),

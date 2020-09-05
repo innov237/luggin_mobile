@@ -187,7 +187,7 @@ class _AcceptOrDeclineRequestPageState
                                                                       'userId_isVerified'] ==
                                                                   'true'
                                                               ? Colors.green
-                                                              : Colors.red,
+                                                              : Colors.black12,
                                                           size: 15.0,
                                                         ),
                                                       ),
@@ -354,28 +354,108 @@ class _AcceptOrDeclineRequestPageState
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 50.0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Text(
-                                              "Transaction Code: ",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
+                                  if (responseData['transactionCode'] != null)
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        height: 50.0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                "Transaction Code: ",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
-                                            ),
-                                            Text(responseData[
-                                                'transactionCode']),
-                                          ],
+                                              Text(
+                                                responseData['transactionCode'],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  )
+                                  if (responseData['isTripOrExpedition'] ==
+                                      'expedition' && responseData['requestStatus'] !=
+                                      'pending') ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Name: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    responseData[
+                                                                'recipientParcelName'] !=
+                                                            null
+                                                        ? responseData[
+                                                            'recipientParcelName']
+                                                        : "",
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Phone Number: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    responseData[
+                                                                'recipientParcelPhoneNumber'] !=
+                                                            null
+                                                        ? responseData[
+                                                            'recipientParcelPhoneNumber']
+                                                        : "",
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Address: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(responseData[
+                                                              'recipientParcelAddress'] !=
+                                                          null
+                                                      ? responseData[
+                                                          'recipientParcelAddress']
+                                                      : ""),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]
                                 ],
                               ),
                             ),
@@ -385,7 +465,7 @@ class _AcceptOrDeclineRequestPageState
                     ),
                   ),
                   Container(
-                    height: 36.0,
+                    height: 40.0,
                     color: Colors.white,
                     child: Column(
                       children: <Widget>[
@@ -394,12 +474,14 @@ class _AcceptOrDeclineRequestPageState
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              if (responseData['requestStatus'] != 'accepted')
+                              if (responseData['requestStatus'] ==
+                                  'pending') ...[
                                 Expanded(
                                   child: InkWell(
                                     onTap: () => _acceptOrDecline('accepted'),
                                     child: Container(
                                       color: Palette.primaryColor,
+                                      height: 40.0,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                           left: 20.0,
@@ -418,12 +500,12 @@ class _AcceptOrDeclineRequestPageState
                                     ),
                                   ),
                                 ),
-                              if (responseData['requestStatus'] != 'declined')
                                 Expanded(
                                   child: InkWell(
                                     onTap: () => _acceptOrDecline('declined'),
                                     child: Container(
                                       color: Colors.redAccent,
+                                      height: 40.0,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                           left: 20.0,
@@ -442,6 +524,34 @@ class _AcceptOrDeclineRequestPageState
                                     ),
                                   ),
                                 )
+                              ],
+                              if (responseData['requestStatus'] ==
+                                  'accepted') ...[
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () => _acceptOrDecline('declined'),
+                                    child: Container(
+                                      color: Colors.redAccent,
+                                      height: 40.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 20.0,
+                                          right: 20.0,
+                                          top: 10.0,
+                                          bottom: 10.0,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "Cancel",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]
                             ],
                           )
                       ],

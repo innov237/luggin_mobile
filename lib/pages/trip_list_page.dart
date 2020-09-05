@@ -68,16 +68,22 @@ class _TripListPageState extends State<TripListPage> {
         body: Padding(
             padding: const EdgeInsets.all(6.0),
             child: FutureBuilder(
-              future: params != null ? getTripByCity() : getAllTrip(),
+              future: this.params != null ? getTripByCity() : getAllTrip(),
               builder: (BuildContext context, AsyncSnapshot snapShot) {
                 if (snapShot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapShot.data.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        TripCardWidget(
-                      responseData: snapShot.data[index],
-                    ),
-                  );
+                  if (snapShot.data.length > 0) {
+                    return ListView.builder(
+                      itemCount: snapShot.data.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          TripCardWidget(
+                        responseData: snapShot.data[index],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Text("No result"),
+                    );
+                  }
                 } else if (snapShot.hasError) {
                   return Center(
                     child: Text("NetWork Error"),

@@ -241,6 +241,28 @@ class _AcceptRequestNotificationDetailPageState
                                         child: Row(
                                           children: <Widget>[
                                             Text(
+                                              "Request status: ",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            Text(responseData['requestStatus']
+                                                .toString()),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Container(
+                                      color: Colors.white,
+                                      height: 50.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Text(
                                               "Payment status: ",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w400,
@@ -279,7 +301,84 @@ class _AcceptRequestNotificationDetailPageState
                                                 ),
                                               )
                                             : Container(),
-                                  )
+                                  ),
+                                  if (responseData['isTripOrExpedition'] ==
+                                      'expedition') ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Name: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    responseData[
+                                                                'recipientParcelName'] !=
+                                                            null
+                                                        ? responseData[
+                                                            'recipientParcelName']
+                                                        : "",
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Phone Number: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    responseData[
+                                                                'recipientParcelPhoneNumber'] !=
+                                                            null
+                                                        ? responseData[
+                                                            'recipientParcelPhoneNumber']
+                                                        : "",
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Recipient Address: ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(responseData[
+                                                              'recipientParcelAddress'] !=
+                                                          null
+                                                      ? responseData[
+                                                          'recipientParcelAddress']
+                                                      : ""),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]
                                 ],
                               ),
                             ),
@@ -289,31 +388,61 @@ class _AcceptRequestNotificationDetailPageState
                     ),
                   ),
                   Container(
-                    height: 39.0,
+                    height: 40.0,
                     child: Column(
                       children: <Widget>[
-                        if (responseData['payment_status'] != "paid") ...[
-                          InkWell(
-                            onTap: () =>
-                                !isLoardDelivery ? _confirmDelivery() : null,
-                            child: Container(
-                              color: Palette.primaryColor,
-                              width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Center(
-                                  child: Text(
-                                    !isLoardDelivery
-                                        ? "Confirm transaction"
-                                        : "please wait...",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.0,
+                        if (responseData['payment_status'] == "pending") ...[
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => !isLoardDelivery
+                                      ? _confirmDelivery()
+                                      : null,
+                                  child: Container(
+                                    color: Palette.primaryColor,
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Center(
+                                        child: Text(
+                                          !isLoardDelivery
+                                              ? "Confirm transaction"
+                                              : "please wait...",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => null,
+                                  child: Container(
+                                    color: Colors.red,
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Center(
+                                        child: Text(
+                                          "Cancel Trasaction",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         ]
                       ],

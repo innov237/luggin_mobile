@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:luggin/environment/environment.dart';
 import 'package:luggin/pages/accept_or_decline_request_page.dart';
+import 'package:luggin/pages/show_one_reviews.dart';
 import 'package:luggin/screens/write_review_screen.dart';
+import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'package:luggin/pages/accept_request_notification_detail_page.dart';
 import 'package:intl/intl.dart';
@@ -18,8 +20,9 @@ class _NotificationPageState extends State<NotificationPage> {
   var authUserData;
   bool isLoard = true;
 
-  String apiUrl = AppEvironement.apiUrlDev;
+  String apiUrl = AppEvironement.apiUrl;
   String imageUrl = AppEvironement.imageUrl;
+  HttpService httpService = HttpService();
 
   var responseData = [];
 
@@ -117,17 +120,18 @@ class _NotificationPageState extends State<NotificationPage> {
     }
 
     if (notificationtype == 'reviews') {
-      print(responseData);
+      var postData = {
+        'idUser': authUserData['id'],
+        'idDeliveryRequest': responseData[0]['id_request']
+      };
 
-      // responseData[0]['idDeliveryRequest'] = responseData[0]['id_request'];
-      // responseData[0]['idReceiver'] = responseData[0]['transmitterId'];
-      // responseData[0]['idSender'] = responseData[0]['receiverId'];
-      // responseData[0]['userData'] = {
-      //   'pseudo': responseData[0]['pseudo'],
-      //   'avatar': responseData[0]['avatar']
-      // };
-
-      // _openPage(WriteReviewScreen(requestData: responseData[0]));
+      httpService.postData("showReviewsOrWrite", postData).then((result) {
+        if (result['userReviews'].length > 0) {
+          _openPage(ShowOneReviews(reviewsData: result['autheruserReviews']));
+        } else {
+          this.writeReviews();
+        }
+      });
     }
 
     if (notificationtype == 'message') {
@@ -139,6 +143,18 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
       );
     }
+  }
+
+  writeReviews() {
+    responseData[0]['idDeliveryRequest'] = responseData[0]['id_request'];
+    responseData[0]['idReceiver'] = responseData[0]['transmitterId'];
+    responseData[0]['idSender'] = responseData[0]['receiverId'];
+    responseData[0]['userData'] = {
+      'pseudo': responseData[0]['pseudo'],
+      'avatar': responseData[0]['avatar']
+    };
+
+    _openPage(WriteReviewScreen(requestData: responseData[0]));
   }
 
   @override

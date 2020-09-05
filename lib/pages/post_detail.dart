@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/config/style.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/screens/payment_screen.dart';
+import 'package:luggin/screens/payment_method_screen.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
 
@@ -101,7 +101,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
     await httpService.postData("createConversation", postData);
 
     //Open payment page
-    _openPage(PaymentScreen(requestData: postData));
+    _openPage(PaymentMethodScreen(requestData: postData));
   }
 
   getPreferencesData() {
@@ -163,7 +163,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                     height: 50.0,
                                   ),
                                   Text(
-                                      "Creating the conversation in progress...")
+                                    "Creating the conversation in progress...",
+                                  )
                                 ],
                               ),
                             ),
@@ -220,475 +221,466 @@ class _PostDetailPageState extends State<PostDetailPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: currentView == 'detailsView'
-            ? authUserData != null
-                ? Stack(
-                    children: [
-                      Container(
-                        height: 200.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/word-map.jpg"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Container(
-                          decoration: Style.gradientDecoration,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 70.0, left: 15.0, right: 15.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      isTripOrExpedition == 'trip'
-                                          ? SizedBox(
-                                              width: 100.0,
-                                              child: Text(
-                                                parceDetail[
-                                                    "cityDepartureTrip"],
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 23.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )
-                                          : Text(
-                                              parceDetail[
-                                                  "cityDepartureParcel"],
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 23.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                      isTripOrExpedition == 'trip'
-                                          ? Text(
-                                              parceDetail["dateDepartureTrip"],
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.white,
-                                              ),
-                                            )
-                                          : Text(
-                                              parceDetail[
-                                                  'dateDepartureParcel'],
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Transform.rotate(
-                                              angle: math.pi / 2,
-                                              child: Icon(
-                                                Icons.local_airport,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                height: 3.0,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        isTripOrExpedition == 'trip'
-                                            ? Wrap(
-                                                children: <Widget>[
-                                                  Text(
-                                                    parceDetail[
-                                                        "timeDepartureTrip"],
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    " - ",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    parceDetail[
-                                                        "timeArrivalTrip"],
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Text(""),
-                                      ],
+        bottomNavigationBar: (authUserData['id'] != parceDetail['idUser'])
+            ? Container(
+                height: 40.0,
+                child: Row(
+                  children: <Widget>[
+                    isTripOrExpedition == 'trip'
+                        ? Expanded(
+                            child: InkWell(
+                              onTap: () => {
+                                setState(() {
+                                  currentView = 'moreInfo';
+                                })
+                              },
+                              child: Container(
+                                height: 40.0,
+                                color: Color(0xFF2488B9),
+                                child: Center(
+                                  child: Text(
+                                    "Book",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      isTripOrExpedition == 'trip'
-                                          ? Text(
-                                              parceDetail["cityArrivalTrip"],
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 23.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          : Text(
-                                              parceDetail["cityArrivalParcel"],
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 23.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                      isTripOrExpedition == 'trip'
-                                          ? Text(
-                                              parceDetail["dateArrivalTrip"],
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.white,
-                                              ),
-                                            )
-                                          : Text(""),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => _createAndOpenConversation(),
+                        child: Container(
+                          height: 40.0,
+                          color: Colors.cyan,
+                          child: Center(
+                            child: Text(
+                              "Make an offer",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        child: LinesHeaderWidget(
-                          title: "Post detail",
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 145.0,
-                          left: 10.0,
-                          right: 10.0,
-                        ),
-                        child: Card(
-                          shape: Style.shapeCard,
-                          elevation: Style.cardElevation,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListView(
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Desired Amount of kilos",
-                                      style: TextStyle(
-                                        fontSize: 17.0,
+                    ),
+                  ],
+                ),
+              )
+            : Container(
+              height: 0.0,
+            ),
+        body: currentView == 'detailsView'
+            ? authUserData != null
+                ? ListView(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            height: 300.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/word-map.jpg"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Container(
+                              decoration: Style.gradientDecoration,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 70.0, left: 15.0, right: 15.0),
+                                child: Row(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 12.0,
+                                            bottom: 60.0,
+                                          ),
+                                          child: Container(
+                                            width: 1.0,
+                                            height: 150.0,
+                                            color:
+                                                Colors.white.withOpacity(0.8),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 55.0,
+                                          ),
+                                          child: Transform.rotate(
+                                            angle: math.pi,
+                                            child: Icon(
+                                              Icons.local_airport,
+                                              color:
+                                                  Colors.white.withOpacity(0.8),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          isTripOrExpedition == 'trip'
+                                              ? Text(
+                                                  parceDetail[
+                                                      "cityDepartureTrip"],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 23.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
+                                              : Text(
+                                                  parceDetail[
+                                                      "cityDepartureParcel"],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 23.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                          isTripOrExpedition == 'trip'
+                                              ? Text(
+                                                  parceDetail[
+                                                      "dateDepartureTrip"],
+                                                  style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  parceDetail[
+                                                      'dateDepartureParcel'],
+                                                  style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                          SizedBox(
+                                            height: 30.0,
+                                          ),
+                                          isTripOrExpedition == 'trip'
+                                              ? Row(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      parceDetail[
+                                                          "timeDepartureTrip"],
+                                                      style: TextStyle(
+                                                        color: Colors.white
+                                                            .withOpacity(0.8),
+                                                        fontSize: 14.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      " - ",
+                                                      style: TextStyle(
+                                                        color: Colors.white
+                                                            .withOpacity(0.8),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      parceDetail[
+                                                          "timeArrivalTrip"],
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(""),
+                                          SizedBox(
+                                            height: 30.0,
+                                          ),
+                                          isTripOrExpedition == 'trip'
+                                              ? Text(
+                                                  parceDetail[
+                                                      "cityArrivalTrip"],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 23.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  parceDetail[
+                                                      "cityArrivalParcel"],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 23.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                          isTripOrExpedition == 'trip'
+                                              ? Text(
+                                                  parceDetail[
+                                                      "dateArrivalTrip"],
+                                                  style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : Text(""),
+                                        ],
                                       ),
                                     ),
-                                    isTripOrExpedition == 'trip'
-                                        ? Text(
-                                            parceDetail["offeredKilosTrip"]
-                                                    .toString() +
-                                                "Kg",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Palette.primaryColor,
-                                            ),
-                                          )
-                                        : Text(
-                                            parceDetail["weightParcel"]
-                                                    .toString() +
-                                                "Kg",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Palette.primaryColor,
-                                            ),
-                                          )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                isTripOrExpedition == 'trip'
-                                    ? Row(
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: LinesHeaderWidget(
+                              title: "Post detail",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 250.0,
+                              left: 0.0,
+                              right: 0.0,
+                            ),
+                            child: Card(
+                              shape: Style.shapeCard,
+                              elevation: Style.cardElevation,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          "Desired Amount of kilos",
+                                          style: TextStyle(
+                                            fontSize: 17.0,
+                                          ),
+                                        ),
+                                        isTripOrExpedition == 'trip'
+                                            ? Text(
+                                                parceDetail["offeredKilosTrip"]
+                                                        .toString() +
+                                                    "Kg",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Palette.primaryColor,
+                                                ),
+                                              )
+                                            : Text(
+                                                parceDetail["weightParcel"]
+                                                        .toString() +
+                                                    "Kg",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Palette.primaryColor,
+                                                ),
+                                              )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    isTripOrExpedition == 'trip'
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                "Price",
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                parceDetail["offeredKilosPriceTrip"]
+                                                        .toString() +
+                                                    "€",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Palette.primaryColor,
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Container(),
+                                    Divider(),
+                                    if (parceDetail["parcelDescription"] !=
+                                        null) ...[
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 15.0,
+                                        ),
+                                        child: Text(
+                                          parceDetail["parcelDescription"],
+                                        ),
+                                      ),
+                                      Divider(),
+                                    ],
+                                    if (authUserData['id'] !=
+                                        parceDetail['idUser']) ...[
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(
-                                            "Price",
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            parceDetail["offeredKilosPriceTrip"]
-                                                    .toString() +
-                                                "€",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Palette.primaryColor,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Container(),
-                                Divider(),
-                                if (parceDetail["parcelDescription"] !=
-                                    null) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 15.0,
-                                    ),
-                                    child: Text(
-                                      parceDetail["parcelDescription"],
-                                    ),
-                                  ),
-                                  Divider(),
-                                ],
-                                if (authUserData['id'] !=
-                                    parceDetail['idUser']) ...[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Column(
-                                        children: <Widget>[
-                                          Text(
-                                            parceDetail["pseudo"],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 30.0,
-                                            width: 5.0,
-                                            color: Palette.scaffoldBg,
-                                          ),
-                                          InkWell(
-                                            onTap: () =>
-                                                _createAndOpenConversation(),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Palette.scaffoldBg,
-                                              child: Icon(
-                                                Icons.chat_bubble_outline,
-                                                color: Colors.purple,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          InkWell(
-                                            onTap: () {
-                                              _openPage(
-                                                UserProfilDetails(
-                                                  responseData: parceDetail,
+                                          Column(
+                                            children: <Widget>[
+                                              Text(
+                                                parceDetail["pseudo"],
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
                                                 ),
-                                              );
-                                            },
-                                            child: Stack(
-                                              children: <Widget>[
-                                                CircleAvatar(
+                                              ),
+                                              Container(
+                                                height: 30.0,
+                                                width: 5.0,
+                                                color: Palette.scaffoldBg,
+                                              ),
+                                              InkWell(
+                                                onTap: () =>
+                                                    _createAndOpenConversation(),
+                                                child: CircleAvatar(
                                                   backgroundColor:
                                                       Palette.scaffoldBg,
-                                                  radius: 27.0,
-                                                  child: CircleAvatar(
-                                                    radius: 25.0,
-                                                    backgroundColor:
-                                                        Colors.black12,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      imageUrl +
-                                                          "storage/" +
-                                                          parceDetail['avatar'],
-                                                    ),
+                                                  child: Icon(
+                                                    Icons.chat_bubble_outline,
+                                                    color: Colors.purple,
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 38.0,
-                                                          left: 30.0),
-                                                  child: CircleAvatar(
-                                                    radius: 10.0,
-                                                    backgroundColor:
-                                                        Color(0XFFF2F5F5),
-                                                    child: Icon(
-                                                      Icons.verified_user,
-                                                      color: parceDetail[
-                                                                  'userId_isVerified'] ==
-                                                              'true'
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                      size: 15.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            width: 5.0,
+                                          Row(
+                                            children: <Widget>[
+                                              InkWell(
+                                                onTap: () {
+                                                  _openPage(
+                                                    UserProfilDetails(
+                                                      responseData: parceDetail,
+                                                    ),
+                                                  );
+                                                },
+                                                child: Stack(
+                                                  children: <Widget>[
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Palette.scaffoldBg,
+                                                      radius: 27.0,
+                                                      child: CircleAvatar(
+                                                        radius: 25.0,
+                                                        backgroundColor:
+                                                            Colors.black12,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                          imageUrl +
+                                                              "storage/" +
+                                                              parceDetail[
+                                                                  'avatar'],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 38.0,
+                                                              left: 30.0),
+                                                      child: CircleAvatar(
+                                                        radius: 10.0,
+                                                        backgroundColor:
+                                                            Color(0XFFF2F5F5),
+                                                        child: Icon(
+                                                          Icons.verified_user,
+                                                          color: parceDetail[
+                                                                      'userId_isVerified'] ==
+                                                                  'true'
+                                                              ? Colors.green
+                                                              : Colors.black12,
+                                                          size: 15.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5.0,
+                                              )
+                                            ],
                                           )
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Divider(),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      InkWell(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ReportUserPage(),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "Report this \n offer",
-                                          style: TextStyle(
-                                            color: Color(0xFF2488B9),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
                                       ),
                                       SizedBox(
                                         height: 10.0,
                                       ),
                                       Divider(),
-                                      SizedBox(
-                                        height: 20.0,
-                                      ),
-                                      Row(
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          isTripOrExpedition == 'trip'
-                                              ? Expanded(
-                                                  child: InkWell(
-                                                    onTap: () => {
-                                                      setState(() {
-                                                        currentView =
-                                                            'moreInfo';
-                                                      })
-                                                    },
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10.0),
-                                                      ),
-                                                      child: Container(
-                                                        height: 40.0,
-                                                        color:
-                                                            Color(0xFF2488B9),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Book",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(),
-                                          SizedBox(width: 5.0),
-                                          Expanded(
-                                            child: InkWell(
-                                              onTap: () =>
-                                                  _createAndOpenConversation(),
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0),
-                                                ),
-                                                child: Container(
-                                                  height: 40.0,
-                                                  color: Colors.cyan,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Make an offer",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                          SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          InkWell(
+                                            onTap: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReportUserPage(),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              "Report this \n offer",
+                                              style: TextStyle(
+                                                color: Color(0xFF2488B9),
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 10.0,
+                                          ),
                                         ],
-                                      ),
-                                    ],
-                                  )
-                                ]
-                              ],
+                                      )
+                                    ]
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   )

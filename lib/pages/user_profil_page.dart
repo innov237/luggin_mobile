@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
 import 'package:luggin/screens/menu_sreen.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:dio/dio.dart';
+import 'package:luggin/services/camera_service.dart';
+import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'dart:convert';
 
@@ -39,72 +38,43 @@ class _UserProfilPageState extends State<UserProfilPage> {
   String activeView = "userProfilview";
 
   File file;
+  File userAvatarfile;
   String imagepath;
   String _newFileNameData;
+  var userIDCardData = [];
+  var userIDcardNameData = [];
 
-  _pickImage(ImageSource source) async {
-    var picture = await ImagePicker.pickImage(source: source);
-    setState(() {
-      file = picture;
-      imagepath = file.path;
-      Navigator.pop(context);
-      _cropImage();
-    });
-  }
-
-  //Cropper image
-  Future<void> _cropImage() async {
-    File cropped = await ImageCropper.cropImage(
-      sourcePath: file.path,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Color(0xFF45C5F8),
-        toolbarTitle: "Edit image",
-        backgroundColor: Color(0xFF45C5F8),
-        toolbarWidgetColor: Colors.white,
-        lockAspectRatio: false,
-        hideBottomControls: true,
-      ),
-    );
-    setState(() {
-      file = cropped ?? file;
-      imagepath = file.path;
-      _newFileNameData = _createFileName();
-      currentUserAvatar = _newFileNameData;
-      updateUserAvatar();
-    });
-  }
-
-  uploadImage(imagepath, fileName) async {
-    setState(() {
-      isLoarding = true;
-    });
-    var uri = Uri.parse(apiUrl + "upload");
-    var request = http.MultipartRequest('POST', uri)
-      ..fields['fileName'] = fileName
-      ..files.add(
-        await http.MultipartFile.fromPath(
-          'file',
-          imagepath,
-          filename: fileName,
-          contentType: MediaType('application', 'x-tar'),
-        ),
-      );
-    var response = await request.send();
-    if (response.statusCode == 200) print('Uploaded!');
-  }
-
-  String _createFileName() {
-    var d = new DateTime.now().millisecondsSinceEpoch.abs(),
-        newFileName = d.toString() + ".jpg";
-    print(newFileName);
-    return newFileName;
-  }
+  CameraService cameraService = CameraService();
+  HttpService httpService = HttpService();
 
   _openPage(context, page) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => page));
   }
 
-  void _settingModalBottomSheet(context) {
+  getImageAndCrop(ImageSource imageSource, bool mutiple) async {
+    //Importation de l'image
+    File imageFile = await cameraService.pickImage(imageSource);
+    //Rogner l'image
+    File imageCropFile = await cameraService.cropImage(imageFile);
+    Navigator.pop(context);
+    setState(() {
+      file = imageCropFile;
+      _newFileNameData = cameraService.createFileName();
+      if (mutiple) {
+        //is Id Card
+        userIDCardData.add(file);
+        userIDcardNameData.add(_newFileNameData);
+      } else {
+        // is avatar
+        userAvatarfile = file;
+        imagepath = file.path;
+        currentUserAvatar = _newFileNameData;
+        updateUserAvatar();
+      }
+    });
+  }
+
+  void _settingModalBottomSheet(context, bool multiple) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -112,13 +82,18 @@ class _UserProfilPageState extends State<UserProfilPage> {
             child: new Wrap(
               children: <Widget>[
                 new ListTile(
-                    leading: new Icon(Icons.image),
-                    title: new Text('Choose from library'),
-                    onTap: () => _pickImage(ImageSource.gallery)),
+                  leading: new Icon(Icons.image),
+                  title: new Text('Choose from library'),
+                  onTap: () async {
+                    getImageAndCrop(ImageSource.gallery, multiple);
+                  },
+                ),
                 new ListTile(
                   leading: new Icon(Icons.camera),
                   title: new Text('Take a photo'),
-                  onTap: () => _pickImage(ImageSource.camera),
+                  onTap: () async {
+                    getImageAndCrop(ImageSource.camera, multiple);
+                  },
                 ),
               ],
             ),
@@ -161,8 +136,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
   }
 
   updateUserAvatar() async {
-    uploadImage(imagepath, currentUserAvatar);
-
+    httpService.uploadImage(imagepath, currentUserAvatar);
     var dio = Dio();
 
     var postData = {'userAvatar': currentUserAvatar, 'userId': userData['id']};
@@ -196,6 +170,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
       'placeOfResidence': _placeResidenceController.text,
       'pseudo': _pseudoController.text,
       'biography': _biographyController.text,
+      'documentPicture': userIDcardNameData,
     };
 
     if (_firstNameController.text.length < 4 ||
@@ -215,6 +190,16 @@ class _UserProfilPageState extends State<UserProfilPage> {
           isLord = false;
         });
         return;
+      }
+    }
+
+    if (userIDcardNameData.length > 0) {
+      for (var i = 0; i < userIDcardNameData.length; i++) {
+        httpService.uploadImage(
+          userIDCardData[i].path,
+          userIDcardNameData[i],
+        );
+        print(userIDCardData[i].path);
       }
     }
 
@@ -257,6 +242,13 @@ class _UserProfilPageState extends State<UserProfilPage> {
     } else {
       return false;
     }
+  }
+
+  removeImage(index) {
+    setState(() {
+      userIDcardNameData.removeAt(index);
+      userIDCardData.removeAt(index);
+    });
   }
 
   @override
@@ -337,13 +329,13 @@ class _UserProfilPageState extends State<UserProfilPage> {
                           children: <Widget>[
                             CircleAvatar(
                               backgroundColor: Colors.black.withOpacity(0.2),
-                              backgroundImage: file == null
+                              backgroundImage: userAvatarfile == null
                                   ? NetworkImage(
                                       imageApiUrl +
                                           "storage/" +
                                           userData["avatar"],
                                     )
-                                  : Image.file(file).image,
+                                  : Image.file(userAvatarfile).image,
                               minRadius: 30.0,
                               maxRadius: 30.0,
                             ),
@@ -351,7 +343,8 @@ class _UserProfilPageState extends State<UserProfilPage> {
                               bottom: 0.0,
                               right: 0.0,
                               child: InkWell(
-                                onTap: () => _settingModalBottomSheet(context),
+                                onTap: () =>
+                                    _settingModalBottomSheet(context, false),
                                 child: CircleAvatar(
                                   radius: 10.0,
                                   backgroundColor: Color(0xFF96B1E4),
@@ -385,7 +378,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
           Container(
             decoration: BoxDecoration(
@@ -400,6 +393,110 @@ class _UserProfilPageState extends State<UserProfilPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "ID Card",
+                      style: TextStyle(
+                        color: Palette.primaryColor,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    RaisedButton(
+                      elevation: 0.3,
+                      onPressed: () => _settingModalBottomSheet(context, true),
+                      child: Row(
+                        children: [
+                          Icon(Icons.camera),
+                          Text(json.decode(userData['documentPicture']).length > 
+                                  0
+                              ? "Update ID Card"
+                              : "Add ID Card"),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                if (userData != null) ...[
+                  if (json.decode(userData['documentPicture']).length > 0 &&
+                      userIDcardNameData.length == 0) ...[
+                    Container(
+                      height: 100.0,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            json.decode(userData['documentPicture']).length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 0.3,
+                            child: Image.network(
+                              imageApiUrl +
+                                      'storage/' +
+                                      json.decode(
+                                          userData['documentPicture'])[index] ??
+                                  null,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                  if (userIDCardData.length > 0) ...[
+                    Container(
+                      height: 100.0,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: userIDCardData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Stack(
+                            children: [
+                              Card(
+                                elevation: 0.3,
+                                child: Image.file(
+                                  userIDCardData[index] ?? null,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () => removeImage(index),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                  if (json.decode(userData['documentPicture']).length == 0 &&
+                      userIDCardData.length == 0) ...[
+                    Container(
+                      height: 100.0,
+                      color: Colors.black12,
+                      child: Center(
+                        child: Text(
+                          "Your ID Card will be displayed here",
+                          style: TextStyle(
+                            color: Palette.primaryColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  ]
+                ],
+                SizedBox(
+                  height: 15.0,
+                ),
                 Text(
                   "Frist Name(s)",
                   style: TextStyle(

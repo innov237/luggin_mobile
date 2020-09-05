@@ -32,6 +32,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
   TextEditingController _recipientParcelPhoneNumber;
   TextEditingController _parcelDescription;
   TextEditingController _flightNumber;
+  TextEditingController _setkilos;
 
   String responseMessage = '';
 
@@ -77,6 +78,68 @@ class _SendParcelPageState extends State<SendParcelPage> {
     });
   }
 
+  Future<void> _setKilosDialog() async {
+    _setkilos.text = _weightParcel.toString();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Edit',
+            style: TextStyle(
+              color: Palette.primaryColor,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  decoration: Style.inputBoxDecorationLg,
+                  height: Style.inputHeight,
+                  child: Center(
+                    child: TextField(
+                      controller: _setkilos,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 12.0),
+                        hintText: 'kilos',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              color: Palette.primaryColor,
+              child: Text(
+                'ok',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  _weightParcel = int.parse(_setkilos.text);
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   getPreferencesData() {
     PreferenceStorage.getDataFormPreferences('USERDATA').then((data) {
       if (null == data) {
@@ -106,8 +169,8 @@ class _SendParcelPageState extends State<SendParcelPage> {
     }
 
     if (step == 3) {
-      if (_arrivalCity == null || _arrivalAirport == null) {
-        setMessage("Required fields");
+      if (_arrivalCity == null) {
+        setMessage("Please Enter city");
         return;
       }
       if (_arrivalCity == _departureCity) {
@@ -194,6 +257,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
     _recipientParcelAddress = TextEditingController();
     _parcelDescription = TextEditingController();
     _flightNumber = TextEditingController();
+    _setkilos = TextEditingController();
 
     getPreferencesData();
     pickedDate = DateTime.now();
@@ -676,7 +740,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
                       child: Text(
                         _arrivalAirport != null
                             ? _arrivalAirport
-                            : "Enter arrival Airport*",
+                            : "Enter arrival Airport",
                         style: TextStyle(
                             fontSize: 18.0, fontStyle: FontStyle.italic),
                       ),
@@ -733,19 +797,22 @@ class _SendParcelPageState extends State<SendParcelPage> {
                 onTap: () => _removeKilos(),
                 child: Icon(
                   Icons.remove_circle,
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black12,
                   size: 30.0,
                 ),
               ),
-              Text(
-                _weightParcel.toString(),
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: () => _setKilosDialog(),
+                child: Text(
+                  _weightParcel.toString(),
+                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                ),
               ),
               InkWell(
                 onTap: () => _addKilos(),
                 child: Icon(
                   Icons.add_circle,
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black12,
                   size: 30.0,
                 ),
               )

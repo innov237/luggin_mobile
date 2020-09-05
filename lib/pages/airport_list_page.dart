@@ -16,7 +16,7 @@ class _AirportListPageState extends State<AirportListPage> {
 
   List serverData;
   List filterData;
-  String apiUrl = AppEvironement.apiUrlDev;
+  String apiUrl = AppEvironement.apiUrl;
 
   getAllAirportByCity(city) async {
     Dio dio = Dio();

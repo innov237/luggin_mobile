@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:luggin/pages/payout_page.dart';
+import 'package:luggin/pages/pending_transfer_page.dart';
 import 'package:luggin/screens/payment_method_screen.dart';
 import 'package:luggin/screens/transfer_history_screen.dart';
 
@@ -36,6 +38,7 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
                       dense: true,
+                      onTap: () => _openPage(PendingTransferPage()),
                       title: Row(
                         children: <Widget>[
                           Text(
@@ -50,50 +53,47 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                     ),
-                    InkWell(
-                      onTap: () => _openPage(TransfertHistoryScreen()),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(0.0),
-                        title: Row(
-                          children: <Widget>[
-                            Text(
-                              'Transfer history',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black.withOpacity(0.8),
-                              ),
-                            )
-                          ],
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => _openPage(PaymentMethodScreen()),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(0.0),
-                        title: Row(
-                          children: <Widget>[
-                            Text(
-                              'Payment methods',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black.withOpacity(0.8),
-                              ),
-                            )
-                          ],
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios),
-                      ),
-                    ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
+                      onTap: () => _openPage(TransfertHistoryScreen()),
                       title: Row(
                         children: <Widget>[
                           Text(
-                            'Payout methods',
+                            'Transfer history',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black.withOpacity(0.8),
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.all(0.0),
+                      onTap: () => _openPage(PaymentMethodScreen()),
+                      title: Row(
+                        children: <Widget>[
+                          Text(
+                            'Payment methods',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black.withOpacity(0.8),
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.all(0.0),
+                      onTap: () => _openPage(PayoutPage()),
+                      title: Row(
+                        children: <Widget>[
+                          Text(
+                            'Payout',
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,

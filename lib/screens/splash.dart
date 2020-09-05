@@ -14,6 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   var userData;
+  Timer _timeDilationTimer;
 
   getPreferencesData() {
     PreferenceStorage.getDataFormPreferences('USERDATA').then((data) {
@@ -47,7 +48,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Timer.periodic(Duration(seconds: 2), (Timer t) => setText());
+    _timeDilationTimer =
+        Timer.periodic(Duration(seconds: 2), (Timer t) => setText());
     getPreferencesData();
     Timer(
       Duration(seconds: 6),
@@ -65,6 +67,12 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timeDilationTimer?.cancel();
+    super.dispose();
   }
 
   @override

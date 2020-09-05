@@ -318,6 +318,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     httService.postData("register", postData).then(
       (result) {
         if (result['success']) {
+          print("000");
           signIn();
         } else {
           setResponseMessage(result['message']);
@@ -695,7 +696,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         children: <TextSpan>[
                           TextSpan(
-                            text: 'resend-code-in'.tr() + "10s",
+                            text: 'resend-code-in'.tr() + " 10s",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white.withOpacity(0.7),
@@ -831,21 +832,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
+                  SizedBox(
+                    height: 2.0,
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Container(
+                      color: Color(0xFF3C5A99),
+                      height: 40.0,
                       child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
-                        responseMessage.tr(),
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontWeight: FontWeight.bold,
+                            "Register with facebook",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      )),
+                      ),
                     ),
                   ),
                   SizedBox(
-                    height: 8.0,
+                    height: 20.0,
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black45,
+                          ),
+                        ),
+                        Text(
+                          "OR",
+                          style: TextStyle(color: Colors.black45),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black45,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (responseMessage != '') ...[
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 0.0),
+                        child: Center(
+                            child: Text(
+                          responseMessage.tr(),
+                          style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                      ),
+                    ),
+                  ],
+                  SizedBox(
+                    height: 20.0,
                   ),
                   Container(
                     height: 46.0,
@@ -1198,6 +1249,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20.0,
             ),
           ],
         ),
@@ -1891,8 +1945,8 @@ class _CreateAccountSuccessWidgetState
                           ),
                           child: Shimmer.fromColors(
                             child: Container(
-                              width: 150.0,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
                                     "go-home-btn".tr(),

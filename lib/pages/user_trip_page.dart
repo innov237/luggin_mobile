@@ -15,7 +15,7 @@ class _UserTripsPageState extends State<UserTripsPage> {
   var userTripsData = [];
   bool isLoard = true;
 
-  String apiUrl = AppEvironement.apiUrlDev;
+  String apiUrl = AppEvironement.apiUrl;
 
   getUserTrip() async {
     Dio dio = Dio();
