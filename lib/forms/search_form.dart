@@ -87,7 +87,7 @@ class _SearchFormState extends State<SearchForm> {
       'spareKilosMax': _spareKilosMax.text,
       'spareKilosMin': _spareKilosMax.text,
       'onlySameFlight': _onlySameFlight.text,
-      'isTripOrRequest': _isTripOrRequest.text,
+      'isTripOrRequest': _isTripOrRequest.text, 
     };
 
     _saveRecentSearch(postData);
