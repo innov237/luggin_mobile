@@ -15,7 +15,7 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
   var pendingTransferData;
   bool isLoad = true;
 
-  _getUserPindingRequest(userId) async {
+  _getUserPendingRequest(userId) async {
     var responseData = await httpservice
         .getPostByKey("getUserPendingRequest", {'key': userId});
 
@@ -39,7 +39,7 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
       setState(() {
         var storageValue = json.decode(data);
         authUserData = storageValue;
-        _getUserPindingRequest(authUserData['id']);
+        _getUserPendingRequest(authUserData['id']);
       });
     });
   }
@@ -49,7 +49,16 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Pending transfer"),
+          leading: Icon(Icons.arrow_back),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                right: 5.0,
+              ),
+              child: Text("Configurer"),
+            ),
+          ],
         ),
         body: !isLoad
             ? pendingTransferData.length > 0

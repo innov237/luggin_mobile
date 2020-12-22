@@ -168,11 +168,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
 
-      // if (await emailExitEmail(_emailController.text) == true) {
-      //   setResponseMessage("email is taken");
-      //   stopLoarder();
-      //   return;
-      // }
+      if (await emailExitEmail(_emailController.text) == true) {
+        setResponseMessage("email-is-use");
+        stopLoarder();
+        return;
+      }
 
       if (_phoneNumberController.text.isNotEmpty) {
         if (!_phoneNumberIsValid(_phoneNumberController.text)) {
@@ -182,13 +182,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       }
 
-      // if (await phoneNumberExit(
-      //         _selectedContryCode + _phoneNumberController.text) ==
-      //     true) {
-      //   setResponseMessage("phone number is use");
-      //   stopLoarder();
-      //   return;
-      // }
+      if (await phoneNumberExit(
+              _selectedContryCode + _phoneNumberController.text) ==
+          true) {
+        setResponseMessage("phone-number-is-use");
+        stopLoarder();
+        return;
+      }
 
       this.phoneNo = _selectedContryCode + _phoneNumberController.text;
     }
@@ -844,7 +844,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Register with facebook",
+                            "register-facebook".tr(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -1032,7 +1032,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: Style.textStyleInputLg,
                           enabled: false,
                           decoration: InputDecoration(
-                            hintText: 'contry-of-residence-input'.tr() + "*",
+                            hintText: 'country-of-residence-input'.tr() + "*",
                             icon: CircleAvatar(
                               radius: 18.0,
                               backgroundColor: Palette.primaryColor,
@@ -1231,22 +1231,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   builder: (context) => LoginScreen(),
                 ),
               ),
-              child: RichText(
-                text: TextSpan(
-                  text: "have-an-account-msg".tr(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'sign-in'.tr(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Palette.primaryColor,
-                      ),
-                    ),
-                  ],
+              child: Text(
+                'sign-in'.tr(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Palette.primaryColor,
                 ),
               ),
             ),

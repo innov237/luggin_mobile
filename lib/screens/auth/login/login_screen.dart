@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/screens/auth/register/register_screen.dart';
-// import 'package:loggin/environment/environment.dart';
+import 'package:luggin/screens/auth/loader.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/screens/tabs_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
@@ -93,7 +93,12 @@ class _LoginScreenState extends State<LoginScreen>
           setResponseMessage(result['message']);
           stopLoarder();
         }
-      });
+      }).catchError(
+        (e) {
+          stopLoarder();
+          setResponseMessage("Network error");
+        },
+      );
     } else {
       setResponseMessage("required-input");
       stopLoarder();
@@ -373,15 +378,7 @@ class _LoginScreenState extends State<LoginScreen>
                                                   style:
                                                       TextStyle(fontSize: 16),
                                                 )
-                                              : SizedBox(
-                                                  height: 30.0,
-                                                  width: 30.0,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                  ),
-                                                ),
+                                              : buildloader(),
                                         ),
                                       ),
                                     ),
@@ -397,22 +394,11 @@ class _LoginScreenState extends State<LoginScreen>
                                       builder: (context) => RegisterScreen(),
                                     ),
                                   ),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: 'dont-have-account'.tr(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: 'sign-up'.tr(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Palette.primaryColor,
-                                          ),
-                                        ),
-                                      ],
+                                  child: Text(
+                                    'sign-up'.tr(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Palette.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -445,7 +431,7 @@ class _LoginScreenState extends State<LoginScreen>
                                       _animationController.value * math.pi * 2,
                                   child: Container(
                                     child: Image.asset(
-                                      "assets/images/logo.jpg",
+                                      "assets/images/logo.png",
                                       height: 60.0,
                                       fit: BoxFit.cover,
                                     ),

@@ -22,9 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
   var textList = [
-    "Monetize your underutilized kilos",
-    "Take your extra luggages with you on board",
-    "Use of spare kilos of a traveler to send your parcels"
+    "slider-text-1",
+    "slider-text-2",
+    "slider-text-3"
   ];
 
   @override
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              height: 150.0,
+              height: 160.0,
               child: ClipRRect(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       width: MediaQuery.of(context).size.width,
-                      height: 150.0,
+                      height: 160.0,
                       child: Padding(
                         padding: const EdgeInsets.only(
                           left: 10.0,
@@ -104,10 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 25.0),
                                 child: SizedBox(
-                                  width: 250.0,
+                                  width: 270.0,
                                   child: Text(
-                                    // "welcome-text".tr(),
-                                    textList[currentIndex],
+                                    textList[currentIndex].tr(),
                                     style: TextStyle(
                                       fontSize: 30.0,
                                       fontWeight: FontWeight.bold,
@@ -159,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           child: Container(
-                            color: Palette.primaryColor.withOpacity(0.5),
+                            color: Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: ClipRRect(
@@ -171,13 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 70.0,
-                                  color: Colors.white,
+                                  color: Palette.primaryColor,
                                   child: Center(
                                     child: Text(
                                       "kilos-at-disposal-input".tr(),
                                       style: TextStyle(
                                         fontSize: 16.0,
-                                        color: Colors.black.withOpacity(0.7),
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -203,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           child: Container(
-                            color: Palette.primaryColor.withOpacity(0.5),
+                            color: Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: ClipRRect(
@@ -215,13 +214,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 70.0,
-                                  color: Colors.white,
+                                  color: Palette.primaryColor,
                                   child: Center(
                                     child: Text(
                                       "parcel-shipped-input".tr(),
                                       style: TextStyle(
                                         fontSize: 16.0,
-                                        color: Colors.black.withOpacity(0.7),
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

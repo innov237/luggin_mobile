@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
+import 'package:luggin/pages/profil_verification.dart';
 import 'package:luggin/pages/user_profil_detail_page.dart';
 import 'package:luggin/pages/user_profil_page.dart';
 import 'package:luggin/screens/auth/login/login_screen.dart';
@@ -224,63 +225,86 @@ class _MenuScreenState extends State<MenuScreen> {
                                 UserProfilPage(),
                               ),
                               child: Container(
-                                child: Row(
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white12,
-                                      radius: 48,
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.black12,
-                                        radius: 45.0,
-                                        backgroundImage: authUserData != null
-                                            ? NetworkImage(
-                                                imageUrl +
-                                                    'storage/' +
-                                                    authUserData['avatar'],
-                                              )
-                                            : null,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5.0,
-                                    ),
-                                    Column(
+                                  children: [
+                                    Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          authUserData != null
-                                              ? authUserData['pseudo']
-                                              : 'userName',
-                                          style: TextStyle(
-                                            color:
-                                                Colors.white.withOpacity(0.9),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 19.0,
+                                      children: <Widget>[
+                                        CircleAvatar(
+                                          backgroundColor: Colors.white12,
+                                          radius: 48,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.black12,
+                                            radius: 45.0,
+                                            backgroundImage: authUserData !=
+                                                    null
+                                                ? NetworkImage(
+                                                    imageUrl +
+                                                        'storage/' +
+                                                        authUserData['avatar'],
+                                                  )
+                                                : null,
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 20.0,
+                                          width: 5.0,
                                         ),
-                                        if (authUserData != null) ...[
-                                          if (authUserData[
-                                                  'userId_isVerified'] ==
-                                              'false') ...[
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
                                             Text(
-                                              "Your Id is not verified\nclick to setting and send your ID Card",
+                                              authUserData != null
+                                                  ? authUserData['pseudo']
+                                                  : 'userName',
                                               style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10.0,
+                                                color: Colors.white
+                                                    .withOpacity(0.9),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 19.0,
                                               ),
                                             ),
-                                          ]
-                                        ]
+                                            if (authUserData != null) ...[
+                                              if (authUserData[
+                                                      'userId_isVerified'] ==
+                                                  'false') ...[
+                                                Icon(
+                                                  Icons.verified,
+                                                  color: Colors.greenAccent,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfilVerification(
+                                                          authUserData:
+                                                              authUserData,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    "complete-profile".tr(),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]
+                                            ]
+                                          ],
+                                        )
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -381,6 +405,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       onTap: () =>
@@ -410,6 +435,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       onTap: () => _openPage(
@@ -441,6 +467,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       onTap: () => _openPage(
@@ -470,6 +497,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       onTap: () => _openPage(
                                         context,
@@ -503,6 +531,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
@@ -612,6 +641,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
@@ -639,6 +669,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
@@ -666,6 +697,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
@@ -693,6 +725,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       onTap: () => _openPage(
@@ -724,6 +757,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         color: Colors.black.withOpacity(0.2),
                                       ),
                                     ),
+                                    Divider(),
                                     ListTile(
                                       onTap: () => _showMyDialog(),
                                       contentPadding: EdgeInsets.all(0.0),

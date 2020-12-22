@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:luggin/services/camera_service.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 
 class UserProfilPage extends StatefulWidget {
@@ -312,7 +313,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Edit Profile",
+                            "edit-profile".tr(),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -336,12 +337,12 @@ class _UserProfilPageState extends State<UserProfilPage> {
                                           userData["avatar"],
                                     )
                                   : Image.file(userAvatarfile).image,
-                              minRadius: 30.0,
-                              maxRadius: 30.0,
+                              minRadius: 40.0,
+                              maxRadius: 40.0,
                             ),
                             Positioned(
                               bottom: 0.0,
-                              right: 0.0,
+                              right: 3.0,
                               child: InkWell(
                                 onTap: () =>
                                     _settingModalBottomSheet(context, false),
@@ -349,7 +350,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                                   radius: 10.0,
                                   backgroundColor: Color(0xFF96B1E4),
                                   child: Icon(Icons.camera_alt,
-                                      size: 10.0, color: Colors.white),
+                                      size: 15.0, color: Colors.white),
                                 ),
                               ),
                             )
@@ -393,112 +394,112 @@ class _UserProfilPageState extends State<UserProfilPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "ID Card",
-                      style: TextStyle(
-                        color: Palette.primaryColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    RaisedButton(
-                      elevation: 0.3,
-                      onPressed: () => _settingModalBottomSheet(context, true),
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera),
-                          Text(json.decode(userData['documentPicture']).length > 
-                                  0
-                              ? "Update ID Card"
-                              : "Add ID Card"),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                if (userData != null) ...[
-                  if (json.decode(userData['documentPicture']).length > 0 &&
-                      userIDcardNameData.length == 0) ...[
-                    Container(
-                      height: 100.0,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount:
-                            json.decode(userData['documentPicture']).length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 0.3,
-                            child: Image.network(
-                              imageApiUrl +
-                                      'storage/' +
-                                      json.decode(
-                                          userData['documentPicture'])[index] ??
-                                  null,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                  if (userIDCardData.length > 0) ...[
-                    Container(
-                      height: 100.0,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: userIDCardData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Stack(
-                            children: [
-                              Card(
-                                elevation: 0.3,
-                                child: Image.file(
-                                  userIDCardData[index] ?? null,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  onTap: () => removeImage(index),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                  if (json.decode(userData['documentPicture']).length == 0 &&
-                      userIDCardData.length == 0) ...[
-                    Container(
-                      height: 100.0,
-                      color: Colors.black12,
-                      child: Center(
-                        child: Text(
-                          "Your ID Card will be displayed here",
-                          style: TextStyle(
-                            color: Palette.primaryColor,
-                          ),
-                        ),
-                      ),
-                    )
-                  ]
-                ],
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       "ID Card",
+                //       style: TextStyle(
+                //         color: Palette.primaryColor,
+                //         fontSize: 18.0,
+                //       ),
+                //     ),
+                //     RaisedButton(
+                //       elevation: 0.3,
+                //       onPressed: () => _settingModalBottomSheet(context, true),
+                //       child: Row(
+                //         children: [
+                //           Icon(Icons.camera),
+                //           Text(json.decode(userData['documentPicture']).length >
+                //                   0
+                //               ? "Update ID Card"
+                //               : "Add ID Card"),
+                //         ],
+                //       ),
+                //     )
+                //   ],
+                // ),
+                // SizedBox(
+                //   height: 10.0,
+                // ),
+                // if (userData != null) ...[
+                //   if (json.decode(userData['documentPicture']).length > 0 &&
+                //       userIDcardNameData.length == 0) ...[
+                //     Container(
+                //       height: 100.0,
+                //       child: ListView.builder(
+                //         scrollDirection: Axis.horizontal,
+                //         itemCount:
+                //             json.decode(userData['documentPicture']).length,
+                //         itemBuilder: (BuildContext context, int index) {
+                //           return Card(
+                //             elevation: 0.3,
+                //             child: Image.network(
+                //               imageApiUrl +
+                //                       'storage/' +
+                //                       json.decode(
+                //                           userData['documentPicture'])[index] ??
+                //                   null,
+                //               fit: BoxFit.cover,
+                //             ),
+                //           );
+                //         },
+                //       ),
+                //     )
+                //   ],
+                //   if (userIDCardData.length > 0) ...[
+                //     Container(
+                //       height: 100.0,
+                //       child: ListView.builder(
+                //         scrollDirection: Axis.horizontal,
+                //         itemCount: userIDCardData.length,
+                //         itemBuilder: (BuildContext context, int index) {
+                //           return Stack(
+                //             children: [
+                //               Card(
+                //                 elevation: 0.3,
+                //                 child: Image.file(
+                //                   userIDCardData[index] ?? null,
+                //                   fit: BoxFit.cover,
+                //                 ),
+                //               ),
+                //               Padding(
+                //                 padding: EdgeInsets.all(8.0),
+                //                 child: GestureDetector(
+                //                   onTap: () => removeImage(index),
+                //                   child: Icon(
+                //                     Icons.delete,
+                //                     color: Colors.red,
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           );
+                //         },
+                //       ),
+                //     )
+                //   ],
+                //   if (json.decode(userData['documentPicture']).length == 0 &&
+                //       userIDCardData.length == 0) ...[
+                //     Container(
+                //       height: 100.0,
+                //       color: Colors.black12,
+                //       child: Center(
+                //         child: Text(
+                //           "Your ID Card will be displayed here",
+                //           style: TextStyle(
+                //             color: Palette.primaryColor,
+                //           ),
+                //         ),
+                //       ),
+                //     )
+                //   ]
+                // ],
                 SizedBox(
                   height: 15.0,
                 ),
                 Text(
-                  "Frist Name(s)",
+                  "first-name-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -508,7 +509,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                   controller: _firstNameController,
                   style: TextStyle(fontSize: 18.0),
                   decoration: InputDecoration(
-                    hintText: 'Frist Name(s)',
+                    hintText: "first-name-input".tr(),
                     border: InputBorder.none,
                   ),
                 )
@@ -532,7 +533,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Last Name",
+                  "last-name-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -542,7 +543,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                   controller: _surNameController,
                   style: TextStyle(fontSize: 18.0),
                   decoration: InputDecoration(
-                    hintText: 'Surname',
+                    hintText: "first-name-input".tr(),
                     border: InputBorder.none,
                   ),
                 )
@@ -566,7 +567,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Pseudo",
+                  "pseudo-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -576,7 +577,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                   controller: _pseudoController,
                   style: TextStyle(fontSize: 18.0),
                   decoration: InputDecoration(
-                    hintText: 'Pseudo',
+                    hintText: "pseudo-input".tr(),
                     border: InputBorder.none,
                   ),
                 )
@@ -600,7 +601,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Phone Number",
+                  "phone-number-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -614,7 +615,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                         enabled: false,
                         style: TextStyle(fontSize: 18.0),
                         decoration: InputDecoration(
-                          hintText: 'Phone Number',
+                          hintText: "phone-number-input".tr(),
                           border: InputBorder.none,
                         ),
                       ),
@@ -647,7 +648,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Date of birth day",
+                    "date-of-birth-input".tr(),
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Color(0xFF2288B9),
@@ -658,7 +659,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                     enabled: false,
                     style: TextStyle(fontSize: 18.0),
                     decoration: InputDecoration(
-                      hintText: 'date of birth day',
+                      hintText: "date-of-birth-input".tr(),
                       border: InputBorder.none,
                     ),
                   )
@@ -683,7 +684,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Email address",
+                  "email-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -697,7 +698,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                         enabled: false,
                         style: TextStyle(fontSize: 18.0),
                         decoration: InputDecoration(
-                          hintText: 'Email address',
+                          hintText: "email-input".tr(),
                           border: InputBorder.none,
                         ),
                       ),
@@ -728,7 +729,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Password",
+                  "password-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -773,7 +774,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Address",
+                  "address-input".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
@@ -783,7 +784,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                   controller: _placeResidenceController,
                   style: TextStyle(fontSize: 18.0),
                   decoration: InputDecoration(
-                    hintText: 'Address',
+                    hintText: "address-input".tr(),
                     border: InputBorder.none,
                   ),
                 )
@@ -805,18 +806,33 @@ class _UserProfilPageState extends State<UserProfilPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "About me",
+                  "about-me".tr(),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Color(0xFF2288B9),
                   ),
                 ),
-                TextField(
-                  controller: _biographyController,
-                  style: TextStyle(fontSize: 18.0),
-                  decoration: InputDecoration(
-                    hintText: 'About me',
-                    border: InputBorder.none,
+                SizedBox(height: 3.0),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black.withOpacity(0.2),
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _biographyController,
+                      minLines: 5,
+                      maxLines: 5,
+                      maxLength: 500,
+                      style: TextStyle(fontSize: 18.0),
+                      decoration: InputDecoration(
+                        hintText: "about-me".tr(),
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
                 )
               ],

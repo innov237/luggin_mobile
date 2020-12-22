@@ -20,8 +20,8 @@ class _TabsScreenState extends State<TabsScreen> {
   int _currentIndex = 2;
 
   final List _screens = [
-    Scaffold(),
-    Scaffold(),
+    TakeParcelPage(),
+    SendParcelPage(),
     HomeScreen(),
     SearchScreen(),
     ChatListPage(),
@@ -116,10 +116,7 @@ class _TabsScreenState extends State<TabsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     InkWell(
-                      onTap: () => _openPage(
-                        context,
-                        TakeParcelPage(),
-                      ),
+                      onTap: () => _setIndex(0),
                       child: Column(
                         children: <Widget>[
                           Image.asset(
@@ -144,10 +141,7 @@ class _TabsScreenState extends State<TabsScreen> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => _openPage(
-                        context,
-                        SendParcelPage(),
-                      ),
+                      onTap: () => _setIndex(1),
                       child: Column(
                         children: <Widget>[
                           Image.asset(
@@ -176,7 +170,7 @@ class _TabsScreenState extends State<TabsScreen> {
                       child: Column(
                         children: <Widget>[
                           Image.asset(
-                            "assets/images/logo2.png",
+                            "assets/images/logo.png",
                             height: 45.0,
                           ),
                         ],

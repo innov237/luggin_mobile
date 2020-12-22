@@ -30,9 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
   int currentIndex = 0;
 
   var textList = [
-    "Pool luggage together",
+    "Pool luggages together",
     "Share costs",
-    "Reduce costs for a better world"
+    "Reduce footprint for a better world"
   ];
 
   void setText() {
@@ -119,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Image.asset(
-                                "assets/images/logo3.jpg",
+                                "assets/images/logo.png",
                                 height: 70.0,
                                 width: 70.0,
                                 fit: BoxFit.cover,
@@ -135,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           highlightColor: Colors.white,
                           child: Container(
                             child: Text(
-                              "LuggIn",
+                              "Luggin",
                               style: TextStyle(
                                 fontSize: 35.0,
                                 fontWeight: FontWeight.bold,
@@ -159,23 +159,6 @@ class _SplashScreenState extends State<SplashScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Version test v-1.0 en developpement",
-                          style: TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                        Text("Par www.innov237.com")
                       ],
                     ),
                   ),

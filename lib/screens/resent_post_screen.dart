@@ -7,6 +7,7 @@ import 'package:luggin/config/palette.dart';
 import 'package:luggin/widgets/tripCard_widgets.dart';
 import 'package:luggin/widgets/requestCard_widgets.dart';
 import 'package:luggin/widgets/linesHeader_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ResentPostScreen extends StatefulWidget {
   @override
@@ -79,7 +80,7 @@ class _ResentPostScreenState extends State<ResentPostScreen> {
               ),
             ),
             LinesHeaderWidget(
-              title: "Resent post",
+              title: "recent-post".tr()
             ),
             Padding(
               padding: const EdgeInsets.only(

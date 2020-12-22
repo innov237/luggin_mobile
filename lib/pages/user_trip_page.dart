@@ -4,6 +4,7 @@ import 'package:luggin/services/preferences_service.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:luggin/widgets/tripCard_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserTripsPage extends StatefulWidget {
   @override
@@ -64,7 +65,7 @@ class _UserTripsPageState extends State<UserTripsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("My trips"),
+          title: Text("your-trips".tr()),
         ),
         body: (!isLoard && userTripsData.length > 0)
             ? ListView.builder(
@@ -79,15 +80,8 @@ class _UserTripsPageState extends State<UserTripsPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset(
-                          "assets/images/empty.png",
-                          width: 100.0,
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
                         Text(
-                          "No trips found",
+                          "You don't have a published trip yet",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),

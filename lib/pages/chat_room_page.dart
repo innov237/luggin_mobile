@@ -937,10 +937,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       ),
                     ],
                     if (conversationData[index]['proposalStatus'] == 0) ...[
-                      Text("Refused"),
+                      Text("refused"),
                     ],
                     if (conversationData[index]['proposalStatus'] == 1) ...[
-                      Text("Accepted"),
+                      Text("accepted"),
                     ]
                   ],
                 ),

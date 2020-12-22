@@ -4,6 +4,7 @@ import 'package:luggin/services/preferences_service.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:luggin/widgets/requestCard_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserRequestPage extends StatefulWidget {
   @override
@@ -64,7 +65,7 @@ class _UserRequestPageState extends State<UserRequestPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("My requests"),
+          title: Text("your-requests".tr()),
         ),
         body: (!isLoard && userRequestData.length > 0)
             ? ListView.builder(
@@ -79,15 +80,8 @@ class _UserRequestPageState extends State<UserRequestPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image.asset(
-                          "assets/images/empty.png",
-                          width: 100.0,
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
                         Text(
-                          "No requests found",
+                          "You don't have a published request yet",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
