@@ -8,6 +8,7 @@ import 'package:luggin/pages/city_list_page.dart';
 import 'package:luggin/screens/tabs_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'package:luggin/services/http_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SendParcelPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
   String _departureDate;
   String _arrivalCity;
   String _arrivalAirport;
-  int _weightParcel = 4;
+  int _weightParcel = 1;
   TextEditingController _recipientParcelName;
   TextEditingController _recipientParcelAddress;
   TextEditingController _recipientParcelPhoneNumber;
@@ -44,7 +45,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
 
   var titleData = [
     '',
-    'Send!',
+    "parcel-shipped-input".tr(),
     'Where does the parcel comes from?',
     'What is the shipping city?',
     'Desired date of shipment?',
@@ -162,8 +163,8 @@ class _SendParcelPageState extends State<SendParcelPage> {
         return;
       }
 
-      if (_departureCity == null || _departureAirport == null) {
-        setMessage("Required fields");
+      if (_departureCity == null) {
+        setMessage("Please Enter city");
         return;
       }
     }
@@ -330,6 +331,8 @@ class _SendParcelPageState extends State<SendParcelPage> {
       });
     }
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +509,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
                                                                       : null,
                                     ),
                                     SizedBox(
-                                      height: 50.0,
+                                      height: 15.0,
                                     ),
                                     Container(
                                       height: 50.0,
@@ -694,7 +697,7 @@ class _SendParcelPageState extends State<SendParcelPage> {
                       child: Text(
                         _departureAirport != null
                             ? _departureAirport
-                            : "Enter departure Airport*",
+                            : "Enter departure Airport",
                         style: TextStyle(
                             fontSize: 18.0, fontStyle: FontStyle.italic),
                       ),
@@ -1262,6 +1265,13 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
         child: Scaffold(
           body: Column(
             children: <Widget>[
+              SizedBox(
+                height: 30.0,
+              ),
+              Image.asset(
+                "assets/images/luggin-text.jpg",
+                width: 120.0,
+              ),
               Container(
                 height: 220.0,
                 child: Padding(
@@ -1295,7 +1305,9 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
                           onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (conext) => TabsScreen(),
+                              builder: (conext) => TabsScreen(
+                                selectedPage: 2,
+                              ),
                             ),
                           ),
                           child: Image.asset(
@@ -1319,7 +1331,9 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
                         onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (conext) => TabsScreen(),
+                            builder: (conext) => TabsScreen(
+                              selectedPage: 2,
+                            ),
                           ),
                         ),
                         child: CircleAvatar(

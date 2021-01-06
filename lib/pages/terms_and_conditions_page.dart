@@ -18,7 +18,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                "Terms and Conditions agreement, are Terms of Use or Terms of Service, is the legal backbone of the relationship between LuggIn mobile app and their  users. It sets forth clauses that embody the rules, requirements, restrictions and limitations that a user must agree to in order to use the mobile app",
+                "Conditions générales à fournir ultérieurement",
                 style: TextStyle(
                   fontSize: 18.0,
                 ),

@@ -55,7 +55,7 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
-                      onTap: () => _openPage(TransfertHistoryScreen()),
+                      onTap: () => null,
                       title: Row(
                         children: <Widget>[
                           Text(
@@ -89,7 +89,7 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
-                      onTap: () => _openPage(PayoutPage()),
+                      onTap: () => null,
                       title: Row(
                         children: <Widget>[
                           Text(

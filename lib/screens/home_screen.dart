@@ -6,6 +6,8 @@ import 'package:luggin/config/palette.dart';
 import 'package:luggin/pages/post_trip_page.dart';
 import 'package:luggin/pages/send_parcel_page.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:luggin/pages/tabs_page.dart';
+import 'package:luggin/screens/tabs_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,16 +23,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int currentIndex = 0;
 
-  var textList = [
-    "slider-text-1",
-    "slider-text-2",
-    "slider-text-3"
-  ];
+  var textList = ["slider-text-1", "slider-text-2", "slider-text-3"];
 
   @override
   void initState() {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setText());
+  }
+
+  _openTabs(index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TabsScreen(
+          selectedPage: index,
+        ),
+      ),
+    );
   }
 
   void setText() {
@@ -147,10 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       InkWell(
-                        onTap: () => _openPage(
-                          context,
-                          TakeParcelPage(),
-                        ),
+                        onTap: () => _openTabs(0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(
                             Radius.circular(
@@ -191,10 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 20.0,
                       ),
                       InkWell(
-                        onTap: () => _openPage(
-                          context,
-                          SendParcelPage(),
-                        ),
+                        onTap: () => _openTabs(1),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(
                             Radius.circular(

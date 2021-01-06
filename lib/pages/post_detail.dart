@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/config/style.dart';
 import 'package:luggin/environment/environment.dart';
+import 'package:luggin/pages/user_profil_detail_page.dart';
 import 'package:luggin/screens/payment_method_screen.dart';
+import 'package:luggin/screens/payment_screen.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
 
-import 'package:luggin/pages/user_profil_detail_page.dart';
+import 'package:luggin/pages/user_public_profil_page.dart';
 import 'package:luggin/pages/chat_room_page.dart';
 import 'package:luggin/pages/report_user_page.dart';
 import 'package:luggin/widgets/linesHeader_widgets.dart';
@@ -101,7 +103,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
     await httpService.postData("createConversation", postData);
 
     //Open payment page
-    _openPage(PaymentMethodScreen(requestData: postData));
+    _openPage(PaymentScreen(
+      requestData: postData,
+      paymentMethod: 'savedCard',
+    ));
   }
 
   getPreferencesData() {
@@ -272,8 +277,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 ),
               )
             : Container(
-              height: 0.0,
-            ),
+                height: 0.0,
+              ),
         body: currentView == 'detailsView'
             ? authUserData != null
                 ? ListView(
@@ -312,7 +317,21 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            top: 55.0,
+                                            top: 1.0,
+                                            left: 8.0,
+                                          ),
+                                          child: Transform.rotate(
+                                            angle: math.pi,
+                                            child: CircleAvatar(
+                                              radius: 5.0,
+                                              backgroundColor: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 10.0,
+                                            left: 1.0,
                                           ),
                                           child: Transform.rotate(
                                             angle: math.pi,
@@ -320,6 +339,19 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                               Icons.local_airport,
                                               color:
                                                   Colors.white.withOpacity(0.8),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 120.0,
+                                            left: 8.0,
+                                          ),
+                                          child: Transform.rotate(
+                                            angle: math.pi,
+                                            child: CircleAvatar(
+                                              radius: 5.0,
+                                              backgroundColor: Colors.white,
                                             ),
                                           ),
                                         )
@@ -479,7 +511,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
-                                          "Desired Amount of kilos",
+                                          isTripOrExpedition == 'trip'
+                                              ? "Desired Amount of kilos"
+                                              : "Proposed amount of kilos",
                                           style: TextStyle(
                                             fontSize: 17.0,
                                           ),
@@ -586,8 +620,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                               InkWell(
                                                 onTap: () {
                                                   _openPage(
-                                                    UserProfilDetails(
-                                                      responseData: parceDetail,
+                                                    UserPublicProfil(
+                                                      responseData:
+                                                          authUserData,
                                                     ),
                                                   );
                                                 },
@@ -662,7 +697,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                               ),
                                             ),
                                             child: Text(
-                                              "Report this \n offer",
+                                              isTripOrExpedition == 'trip'
+                                                  ? "report this offer"
+                                                  : "report this request",
                                               style: TextStyle(
                                                 color: Color(0xFF2488B9),
                                                 fontWeight: FontWeight.bold,
@@ -674,6 +711,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                           ),
                                         ],
                                       )
+                                    ],
+                                    if (authUserData['id'] ==
+                                        parceDetail['idUser']) ...[
+                                      isTripOrExpedition == 'trip'
+                                          ? postParameterTrip()
+                                          : postParameterRequest()
                                     ]
                                   ],
                                 ),
@@ -790,6 +833,161 @@ class _PostDetailPageState extends State<PostDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget postParameterTrip() {
+    return Container(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text("Edit your trip"),
+            trailing: Icon(Icons.arrow_forward_ios),
+            contentPadding: EdgeInsets.all(0.0),
+          ),
+          ListTile(
+            title: Text("Duplicate your trip"),
+            contentPadding: EdgeInsets.all(0.0),
+          ),
+          ListTile(
+            title: Text("Publish your Return trip"),
+            trailing: Icon(Icons.arrow_forward_ios),
+            contentPadding: EdgeInsets.all(0.0),
+          ),
+          ListTile(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CancelTripOrRequest(
+                  isTripOrExpedition: 'trip',
+                  id: 1,
+                ),
+              ),
+            ),
+            title: Text("Cancel your trip"),
+            contentPadding: EdgeInsets.all(0.0),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget postParameterRequest() {
+    return Container(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text("Edit your request "),
+            trailing: Icon(Icons.arrow_forward_ios),
+            contentPadding: EdgeInsets.all(0.0),
+          ),
+          ListTile(
+            title: Text("Duplicate your request"),
+            contentPadding: EdgeInsets.all(0.0),
+          ),
+          ListTile(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CancelTripOrRequest(
+                  isTripOrExpedition: 'trip',
+                  id: 1,
+                ),
+              ),
+            ),
+            title: Text("Cancel your request"),
+            contentPadding: EdgeInsets.all(0.0),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CancelTripOrRequest extends StatefulWidget {
+  final isTripOrExpedition;
+  final id;
+  CancelTripOrRequest({@required this.isTripOrExpedition, @required this.id});
+
+  @override
+  _CancelTripOrRequestState createState() => _CancelTripOrRequestState();
+}
+
+class _CancelTripOrRequestState extends State<CancelTripOrRequest> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Palette.primaryColor,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 100.0,
+              ),
+              Expanded(
+                  child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.add_alert,
+                      size: 80.0,
+                      color: Colors.redAccent,
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    Text(
+                      "Vous etes sur le point d'annuler votre trajet. Celui-ci sera supprimé et les passagers ne pourront plus voyager avec vous",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+              Container(
+                color: Palette.primaryColor,
+                height: 100.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Palette.primaryColor,
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          20.0,
+                        ),
+                      ),
+                      onPressed: () => null,
+                      color: Colors.redAccent,
+                      child: Text(
+                        'Cancel trip',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

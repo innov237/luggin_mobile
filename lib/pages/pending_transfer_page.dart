@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:luggin/config/palette.dart';
+import 'package:luggin/core/loader/loader.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
 
@@ -21,6 +23,7 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
 
     setState(() {
       pendingTransferData = responseData;
+      print(pendingTransferData);
       isLoad = false;
     });
   }
@@ -49,11 +52,14 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.arrow_back),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(Icons.arrow_back),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(
-                top: 10.0,
+                top: 20.0,
                 right: 5.0,
               ),
               child: Text("Configurer"),
@@ -61,78 +67,138 @@ class _PendingTransferPageState extends State<PendingTransferPage> {
           ],
         ),
         body: !isLoad
-            ? pendingTransferData.length > 0
-                ? ListView.builder(
-                    itemCount: pendingTransferData.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 5.0,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    pendingTransferData[index]['price_delivery']
-                                            .toString() +
-                                        "€",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+            ? ListView(
+                children: [
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Card(
+                          elevation: 0.2,
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
+                                      Text("Montant en attente"),
                                       Text(
-                                        "From: " +
-                                            pendingTransferData[index]
-                                                ['pseudo'],
-                                      ),
-                                      SizedBox(
-                                        height: 8.0,
-                                      ),
-                                      Text(
-                                        "ID-Delevery: " +
-                                            pendingTransferData[index]
-                                                    ['idDelevery']
-                                                .toString(),
-                                        style: TextStyle(
-                                          color: Colors.black38,
-                                        ),
+                                        "0.00€",
                                       ),
                                     ],
-                                  )
-                                ],
-                              )
-                            ],
+                                  ),
+                                ),
+                                Divider(),
+                                SizedBox(
+                                  height: 30.0,
+                                ),
+                                Text(
+                                  "0.0€",
+                                  style: TextStyle(
+                                    fontSize: 27.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Text(
+                                  "Montant dispinible",
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 30.0,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 45.0,
+                                    width: double.infinity,
+                                    child: RaisedButton(
+                                      onPressed: () => null,
+                                      elevation: 0.0,
+                                      color: Palette.primaryColor,
+                                      child: Text(
+                                        "Transférer vers un compte bancaire",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      "No  pending transfer ",
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.5),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                          ),
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Contrôle tes dépenses et revenus sur Luggin: après chaque transaction,la somme débitée ou créditée apparaitra ici",
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Card(
+                          elevation: 0.2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                              vertical: 20.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Solde initial",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 3.0,
+                                      ),
+                                      Text("1 oct 2020")
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  "0.00 €",
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   )
-            : Center(
-                child: Container(
-                  height: 15.0,
-                  width: 15.0,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+                ],
+              )
+            : loader(),
       ),
     );
   }

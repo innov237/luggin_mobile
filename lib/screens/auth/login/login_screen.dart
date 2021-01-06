@@ -86,7 +86,11 @@ class _LoginScreenState extends State<LoginScreen>
                 'USERDATA', json.encode(result['data']));
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => TabsScreen()),
+              MaterialPageRoute(
+                builder: (context) => TabsScreen(
+                  selectedPage: 2,
+                ),
+              ),
             );
           });
         } else {

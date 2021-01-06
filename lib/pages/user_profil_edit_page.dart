@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/screens/menu_sreen.dart';
 import 'package:dio/dio.dart';
 import 'package:luggin/services/camera_service.dart';
 import 'package:luggin/services/http_service.dart';
@@ -11,12 +10,12 @@ import 'package:luggin/services/preferences_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 
-class UserProfilPage extends StatefulWidget {
+class UserProfilEditPage extends StatefulWidget {
   @override
-  _UserProfilPageState createState() => _UserProfilPageState();
+  _UserProfilEditPageState createState() => _UserProfilEditPageState();
 }
 
-class _UserProfilPageState extends State<UserProfilPage> {
+class _UserProfilEditPageState extends State<UserProfilEditPage> {
   var userData;
   bool isLord = false;
   String responseMessage = '';
@@ -47,10 +46,6 @@ class _UserProfilPageState extends State<UserProfilPage> {
 
   CameraService cameraService = CameraService();
   HttpService httpService = HttpService();
-
-  _openPage(context, page) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-  }
 
   getImageAndCrop(ImageSource imageSource, bool mutiple) async {
     //Importation de l'image
@@ -300,7 +295,7 @@ class _UserProfilPageState extends State<UserProfilPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         InkWell(
-                          onTap: () => _openPage(context, MenuScreen()),
+                          onTap: () => Navigator.pop(context),
                           child: Icon(
                             Icons.close,
                             size: 25.0,
@@ -620,9 +615,20 @@ class _UserProfilPageState extends State<UserProfilPage> {
                         ),
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black.withOpacity(0.2),
+                    Container(
+                      child: Row(
+                        children: [
+                          userData['phoneNumber_isVerified'] == 'true'
+                              ? Image.asset("assets/images/doneIcon.png",
+                                  width: 20.0)
+                              : Image.asset("assets/images/notDone.png",
+                                  width: 20.0),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )
@@ -703,9 +709,24 @@ class _UserProfilPageState extends State<UserProfilPage> {
                         ),
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black.withOpacity(0.2),
+                    Container(
+                      child: Row(
+                        children: [
+                          userData['email_isVerified'] == 'true'
+                              ? Image.asset(
+                                  "assets/images/doneIcon.png",
+                                  width: 20.0,
+                                )
+                              : Image.asset(
+                                  "assets/images/notDone.png",
+                                  width: 20.0,
+                                ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )
@@ -816,8 +837,8 @@ class _UserProfilPageState extends State<UserProfilPage> {
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black.withOpacity(0.2),
-                      width: 1.0,
+                      color: Colors.black.withOpacity(0.1),
+                      width: 0.6,
                     ),
                   ),
                   child: Padding(
@@ -829,7 +850,8 @@ class _UserProfilPageState extends State<UserProfilPage> {
                       maxLength: 500,
                       style: TextStyle(fontSize: 18.0),
                       decoration: InputDecoration(
-                        hintText: "about-me".tr(),
+                        hintText:
+                            "short presentation of you, in max 500 characters",
                         border: InputBorder.none,
                       ),
                     ),

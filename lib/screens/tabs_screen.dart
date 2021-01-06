@@ -12,12 +12,15 @@ import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class TabsScreen extends StatefulWidget {
+  final int selectedPage;
+  TabsScreen({@required this.selectedPage});
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int _currentIndex = 2;
+  int _currentIndex;
 
   final List _screens = [
     TakeParcelPage(),
@@ -59,6 +62,9 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
+    setState(() {
+      _currentIndex = widget.selectedPage;
+    });
     super.initState();
   }
 

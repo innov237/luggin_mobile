@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/config/style.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/pages/user_profil_detail_page.dart';
+import 'package:luggin/pages/user_public_profil_page.dart';
 import 'package:luggin/screens/tabs_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'package:luggin/services/http_service.dart';
@@ -148,7 +148,7 @@ class _AcceptOrDeclineRequestPageState
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    UserProfilDetails(
+                                                    UserPublicProfil(
                                                   responseData:
                                                       responseData['userData'],
                                                 ),
@@ -379,8 +379,9 @@ class _AcceptOrDeclineRequestPageState
                                       ),
                                     ),
                                   if (responseData['isTripOrExpedition'] ==
-                                      'expedition' && responseData['requestStatus'] !=
-                                      'pending') ...[
+                                          'expedition' &&
+                                      responseData['requestStatus'] !=
+                                          'pending') ...[
                                     Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Container(
@@ -626,7 +627,9 @@ class _SuccessWidgetState extends State<SuccessWidget> {
                       onTap: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (conext) => TabsScreen(),
+                          builder: (conext) => TabsScreen(
+                            selectedPage: 2,
+                          ),
                         ),
                       ),
                       child: CircleAvatar(

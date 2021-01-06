@@ -60,7 +60,9 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => TabsScreen(),
+          builder: (context) => TabsScreen(
+            selectedPage: 2,
+          ),
         ),
       );
     } else {

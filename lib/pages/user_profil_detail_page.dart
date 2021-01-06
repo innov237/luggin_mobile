@@ -1,657 +1,201 @@
 import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/services/http_service.dart';
-import 'package:intl/intl.dart';
+import 'package:luggin/pages/user_profil_edit_page.dart';
+import 'package:luggin/pages/user_public_profil_page.dart';
 
 class UserProfilDetails extends StatefulWidget {
-  final responseData;
-  UserProfilDetails({@required this.responseData, Key key}) : super(key: key);
+  final authUserData;
+  UserProfilDetails({@required this.authUserData});
   @override
-  _UserProfilDetailsState createState() =>
-      _UserProfilDetailsState(this.responseData);
+  _UserProfilDetailsState createState() => _UserProfilDetailsState();
 }
 
 class _UserProfilDetailsState extends State<UserProfilDetails> {
-  final responseData;
-  _UserProfilDetailsState(this.responseData);
-
-  String imageUrl = AppEvironement.imageUrl;
-
-  HttpService httpService = HttpService();
-
   @override
   void initState() {
     super.initState();
-    print(this.responseData);
-  }
-
-  getAgeInDate(timestamp) {
-    var now = new DateTime.now();
-    var currentYear = now.year;
-
-    DateTime formattedDate = DateFormat.yMd().parse(timestamp);
-    var userYear = formattedDate.year;
-
-    return currentYear - userYear;
-  }
-
-  _getUserReviews() async {
-    var postData = {
-      'userId': responseData['idUser'] != null
-          ? responseData['idUser']
-          : responseData['id'],
-    };
-    var response = await httpService.getPostByKey("getUserReviews", postData);
-    print(response);
-    return response;
-  }
-
-  getDateTime(timestamp) {
-    String formattedDate =
-        DateFormat('yyyy/MM/dd HH:mm').format(DateTime.parse(timestamp));
-    return formattedDate;
-  }
-
-  getuserStat() async {
-    var userId = responseData['idUser'] != null
-        ? responseData['idUser']
-        : responseData['id'];
-    var response = await httpService.getPostByKey("getuserStat", userId);
-
-    return response;
+    print(widget.authUserData);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-        ),
         body: ListView(
-          children: <Widget>[
-            Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Palette.primaryColor,
-                        Colors.cyan.withOpacity(0.8),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(20.0),
-                      bottomLeft: Radius.circular(20.0),
-                    ),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                radius: 55.0,
-                                backgroundColor: Colors.white12,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: CircleAvatar(
-                                    maxRadius: 50.0,
-                                    minRadius: 50.0,
-                                    backgroundImage: NetworkImage(
-                                      imageUrl +
-                                          "storage/" +
-                                          responseData['avatar'],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 70.0, left: 72.0),
-                                child: CircleAvatar(
-                                  radius: 20.0,
-                                  backgroundColor: Colors.white12,
-                                  child: CircleAvatar(
-                                    radius: 18.0,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Icons.verified_user,
-                                      color:
-                                          responseData['userId_isVerified'] ==
-                                                  'true'
-                                              ? Colors.green
-                                              : Colors.black12,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        responseData['pseudo'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25.0,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 2.0,
-                      ),
-                      Text(
-                        responseData['dateOfBirthDay'] != null
-                            ? getAgeInDate(responseData['dateOfBirthDay'])
-                                    .toString() +
-                                " years"
-                            : "",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 38.0,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 180.0,
-                    left: 10.0,
-                    right: 10.0,
-                  ),
-                  child: Card(
-                    elevation: 0.2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          FutureBuilder(
-                            future: getuserStat(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapShot) {
-                              return snapShot.hasData
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Container(
-                                          child: Column(
-                                            children: <Widget>[
-                                              Text(
-                                                snapShot
-                                                    .data['countProposalTrip']
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 6.0,
-                                              ),
-                                              Text(
-                                                "Trips Proposal",
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Column(
-                                            children: <Widget>[
-                                              Text(
-                                                snapShot.data[
-                                                        'countDeliveryRequest']
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 6.0,
-                                              ),
-                                              Text(
-                                                "Delivery Request",
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Column(
-                                            children: <Widget>[
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Icon(
-                                                    Icons.star,
-                                                    color: Color(0xFFFFA618),
-                                                    size: 15.0,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1.0,
-                                                  ),
-                                                  Text(
-                                                    snapShot.data['countReview']
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5.0,
-                                              ),
-                                              Text(
-                                                "Reviews",
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  : Container(
-                                      height: 15.0,
-                                      width: 15.0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                            },
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Image.asset(
-                                    responseData['userId_isVerified'] == 'true'
-                                        ? "assets/images/doneIcon.png"
-                                        : "assets/images/notDone.png",
-                                    height: 20.0,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    "Identity",
-                                    style: TextStyle(
-                                      color: Colors.black.withOpacity(0.7),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                width: 25.0,
-                              ),
-                              Column(
-                                children: <Widget>[
-                                  Image.asset(
-                                    responseData['phoneNumber_isVerified'] ==
-                                            'true'
-                                        ? "assets/images/doneIcon.png"
-                                        : "assets/images/notDone.png",
-                                    height: 20.0,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    "Phone",
-                                    style: TextStyle(
-                                      color: Colors.black.withOpacity(0.7),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                width: 25.0,
-                              ),
-                              Column(
-                                children: <Widget>[
-                                  Image.asset(
-                                    responseData['email_isVerified'] == 'true'
-                                        ? "assets/images/doneIcon.png"
-                                        : "assets/images/notDone.png",
-                                    height: 20.0,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    "E-mail",
-                                    style: TextStyle(
-                                      color: Colors.black.withOpacity(0.7),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Card(
-              elevation: 0.0,
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          "Biography",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Palette.primaryColor,
-                              fontSize: 16.0),
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black12,
-                            height: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      responseData['biography'] != null
-                          ? responseData['biography']
-                          : "",
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Palette.primaryColor,
+                    Colors.cyan.withOpacity(0.8),
                   ],
                 ),
               ),
-            ),
-            Card(
-              elevation: 0.0,
-              color: Colors.transparent,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          "Reviews",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Palette.primaryColor,
-                              fontSize: 16.0),
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black12,
-                            height: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Container(
-                      child: FutureBuilder(
-                        future: _getUserReviews(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapShot) {
-                          return snapShot.hasData
-                              ? snapShot.data.length > 0
-                                  ? ListView.builder(
-                                      itemCount: snapShot.data.length,
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      itemBuilder:
-                                          (BuildContext conext, int index) {
-                                        return Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.black12,
-                                                    radius: 20.0,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      imageUrl +
-                                                          "storage/" +
-                                                          snapShot.data[index]
-                                                              ['avatar'],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5.0,
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        snapShot.data[index]
-                                                            ['pseudo'],
-                                                        style: TextStyle(
-                                                          fontSize: 15.0,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 1.0,
-                                                      ),
-                                                      Text(
-                                                        getDateTime(
-                                                            snapShot.data[index]
-                                                                ['created_at']),
-                                                        style: TextStyle(
-                                                          color: Colors.black
-                                                              .withOpacity(0.5),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  top: 10.0,
-                                                  left: 43.0,
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    if (snapShot.data[index]
-                                                            ['star'] !=
-                                                        null) ...[
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          for (var i = 0;
-                                                              i <
-                                                                  snapShot.data[
-                                                                          index]
-                                                                      ['star'];
-                                                              i++) ...[
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Color(
-                                                                  0xFFFFA618),
-                                                              size: 15.0,
-                                                            )
-                                                          ],
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 3.0,
-                                                      ),
-                                                    ],
-                                                    Text(
-                                                      snapShot.data[index]
-                                                                  ['comment'] !=
-                                                              null
-                                                          ? snapShot.data[index]
-                                                              ['comment']
-                                                          : '',
-                                                      style: TextStyle(
-                                                        color: Colors.black
-                                                            .withOpacity(0.5),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 8.0,
-                                              ),
-                                              Divider(),
-                                              SizedBox(
-                                                height: 8.0,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container(
-                                      child: Center(
-                                        child: Text(
-                                          "No Reviews",
-                                          style: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                              : Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      height: 15.0,
-                                      width: 15.0,
-                                      child: CircularProgressIndicator(),
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserProfilEditPage(),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 20.0,
+                                  ),
+                                  Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
                                     ),
                                   ),
-                                );
-                        },
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black12,
+                        radius: 30.0,
+                        backgroundImage: NetworkImage(
+                          AppEvironement.imageUrl +
+                              "storage/" +
+                              widget.authUserData['avatar'],
+                        ),
                       ),
                     )
                   ],
                 ),
               ),
             ),
-            Card(
-              elevation: 0.0,
-              color: Colors.transparent,
+            Container(
+              color: Color(0xFFABABAB).withOpacity(0.2),
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          "Other",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Palette.primaryColor,
-                              fontSize: 16.0),
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black12,
-                            height: 30,
-                          ),
-                        ),
-                      ],
+                  children: [
+                    Text(
+                      "About",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
-                    Text(
-                      "Member since " + getDateTime(responseData['created_at']),
-                      textAlign: TextAlign.center,
+                    Text(widget.authUserData['biography'] ?? ''),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserPublicProfil(
+                              responseData: widget.authUserData,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          "See your public profil",
+                          style: TextStyle(
+                            color: Palette.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
+            SizedBox(
+              height: 10.0,
+            ),
+            ListTile(
+              title: Text("Verified ID"),
+              trailing: widget.authUserData['userId_isVerified'] == 'true'
+                  ? Image.asset("assets/images/doneIcon.png", width: 20.0)
+                  : Image.asset("assets/images/notDone.png", width: 20.0),
+            ),
+            ListTile(
+              title: Text(widget.authUserData['phoneNumber'] ?? 'Phone number'),
+              trailing: widget.authUserData['phoneNumber_isVerified'] == 'true'
+                  ? Image.asset("assets/images/doneIcon.png", width: 20.0)
+                  : Image.asset("assets/images/notDone.png", width: 20.0),
+            ),
+            ListTile(
+              title: Text(widget.authUserData['email'] ?? 'Email'),
+              trailing: widget.authUserData['email_isVerified'] == 'true'
+                  ? Image.asset("assets/images/doneIcon.png", width: 20.0)
+                  : Image.asset("assets/images/notDone.png", width: 20.0),
+            ),
+            Divider(),
+            ListTile(
+              title: Text("Password"),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+              ),
+            ),
+            ListTile(
+              title: Text("PO BOX"),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+              ),
+            ),
+            Divider(),
+            SizedBox(
+              height: 5.0,
+            ),
+            GestureDetector(
+              onTap: () => null,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Reviews",
+                  style: TextStyle(
+                    color: Palette.primaryColor,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

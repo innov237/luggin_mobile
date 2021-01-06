@@ -8,19 +8,50 @@ class NotificationSettingPage extends StatefulWidget {
 }
 
 class _NotificationSettingPageState extends State<NotificationSettingPage> {
-  String userRequestNotificationOption;
-  String userReminderOption;
+  bool ativateEmailForPolicy = false;
+  bool ativatePushForPolicy = false;
+  bool ativateTextForPolicy = false;
 
-  setuserRequestNotificationOption(option) {
-    setState(() {
-      userRequestNotificationOption = option;
-    });
-  }
+  bool ativateEmailForSupport = false;
+  bool ativatePushForSupport = false;
+  bool ativateTextForSupport = false;
 
-  setuserReminderOption(option) {
-    setState(() {
-      userReminderOption = option;
-    });
+  onclick({String catagory, String type}) {
+    if (catagory == 'Policy') {
+      if (type == 'email') {
+        setState(() {
+          ativateEmailForPolicy = !ativateEmailForPolicy;
+        });
+      }
+      if (type == 'push') {
+        setState(() {
+          ativatePushForPolicy = !ativatePushForPolicy;
+        });
+      }
+      if (type == 'text') {
+        setState(() {
+          ativateTextForPolicy = !ativateTextForPolicy;
+        });
+      }
+    }
+
+    if (catagory == 'Support') {
+      if (type == 'email') {
+        setState(() {
+          ativateEmailForSupport = !ativateEmailForSupport;
+        });
+      }
+      if (type == 'push') {
+        setState(() {
+          ativatePushForSupport = !ativatePushForSupport;
+        });
+      }
+      if (type == 'text') {
+        setState(() {
+          ativateTextForSupport = !ativateTextForSupport;
+        });
+      }
+    }
   }
 
   @override
@@ -33,15 +64,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
         body: ListView(
           children: <Widget>[
             SizedBox(height: 5.0),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Messages from members \nincluding requests",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
+            buildItem(
+              title: "Policy and community",
+              subtitle:
+                  "Receive updates on home sharing regulations and stay informed about advocacy efforts to create...",
             ),
             SizedBox(height: 8.0),
             Padding(
@@ -49,7 +75,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
               child: Column(
                 children: <Widget>[
                   InkWell(
-                    onTap: () => setuserRequestNotificationOption('email'),
+                    onTap: () => onclick(catagory: "Policy", type: 'email'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -57,17 +83,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "E-mail",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userRequestNotificationOption == 'email'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativateEmailForPolicy),
                       ],
                     ),
                   ),
@@ -81,7 +97,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                     height: 8.0,
                   ),
                   InkWell(
-                    onTap: () => setuserRequestNotificationOption('push'),
+                    onTap: () => onclick(catagory: "Policy", type: 'push'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -89,17 +105,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "Push notifications",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userRequestNotificationOption == 'push'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativatePushForPolicy),
                       ],
                     ),
                   ),
@@ -113,7 +119,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                     height: 10.0,
                   ),
                   InkWell(
-                    onTap: () => setuserRequestNotificationOption('sms'),
+                    onTap: () => onclick(catagory: "Policy", type: 'text'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -121,17 +127,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "Text Messages",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userRequestNotificationOption == 'sms'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativateTextForPolicy),
                       ],
                     ),
                   ),
@@ -145,15 +141,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Reminders",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
+            buildItem(
+              title: "Account support",
+              subtitle:
+                  "Receive message about your account, your trips, lega notification, security matters, and customer support requests.For your security...",
             ),
             SizedBox(height: 8.0),
             Padding(
@@ -161,7 +152,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
               child: Column(
                 children: <Widget>[
                   InkWell(
-                    onTap: () => setuserReminderOption('email'),
+                    onTap: () => onclick(catagory: "Support", type: 'email'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -169,17 +160,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "E-mail",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userReminderOption == 'email'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativateEmailForSupport),
                       ],
                     ),
                   ),
@@ -193,7 +174,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                     height: 8.0,
                   ),
                   InkWell(
-                    onTap: () => setuserReminderOption('push'),
+                    onTap: () => onclick(catagory: "Support", type: 'push'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -201,17 +182,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "Push notifications",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userReminderOption == 'push'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativatePushForSupport),
                       ],
                     ),
                   ),
@@ -225,7 +196,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                     height: 10.0,
                   ),
                   InkWell(
-                    onTap: () => setuserReminderOption('sms'),
+                    onTap: () => onclick(catagory: "Support", type: 'text'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -233,17 +204,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                           "Text Messages",
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        CircleAvatar(
-                          radius: 10.0,
-                          backgroundColor: Colors.black12,
-                          child: CircleAvatar(
-                            radius: 8.0,
-                            backgroundColor:
-                                userReminderOption == 'sms'
-                                    ? Palette.primaryColor
-                                    : Colors.black12,
-                          ),
-                        ),
+                        isActiveOrInactive(ativateTextForSupport),
                       ],
                     ),
                   ),
@@ -260,6 +221,58 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildItem({String title, String subtitle}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.5),
+                fontSize: 16.0,
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Divider(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget isActiveOrInactive(value) {
+    return Container(
+      child: value
+          ? Icon(
+              Icons.toggle_on,
+              size: 42.0,
+              color: Palette.primaryColor,
+            )
+          : Icon(
+              Icons.toggle_off,
+              size: 42.0,
+              color: Colors.black12,
+            ),
     );
   }
 }

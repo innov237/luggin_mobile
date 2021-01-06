@@ -1858,7 +1858,9 @@ class _CreateAccountSuccessWidgetState
         onWillPop: () => Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TabsScreen(),
+            builder: (context) => TabsScreen(
+              selectedPage: 2,
+            ),
           ),
         ),
         child: Scaffold(
@@ -1929,7 +1931,9 @@ class _CreateAccountSuccessWidgetState
                           onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TabsScreen(),
+                              builder: (context) => TabsScreen(
+                                selectedPage: 2,
+                              ),
                             ),
                           ),
                           child: Shimmer.fromColors(

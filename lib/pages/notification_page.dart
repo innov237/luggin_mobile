@@ -174,7 +174,7 @@ class _NotificationPageState extends State<NotificationPage> {
             : (responseData.length == 0 && !isLoard)
                 ? Center(
                     child: Text(
-                      "No notification",
+                      "You do not have a new notification",
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.6),
                       ),

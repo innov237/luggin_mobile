@@ -7,6 +7,7 @@ import 'package:luggin/pages/airport_list_page.dart';
 import 'package:luggin/pages/city_list_page.dart';
 import 'package:luggin/screens/tabs_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TakeParcelPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class TakeParcelPage extends StatefulWidget {
 }
 
 class _TakeParcelPageState extends State<TakeParcelPage> {
+  bool autoValidate = false;
   var authUserData;
   bool isLoard = false;
   bool addflightNumberField = false;
@@ -44,7 +46,7 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
 
   var titleData = [
     '',
-    'Choose option 1 or option 2',
+    "kilos-at-disposal-input".tr(),
     'Where are you leaving from?',
     'Where are you going?',
     'When are you leaving?',
@@ -53,6 +55,12 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
     'Review',
     'Informations'
   ];
+
+  autoValidateReservation() {
+    setState(() {
+      autoValidate = !autoValidate;
+    });
+  }
 
   setLoarder() {
     setState(() {
@@ -369,7 +377,7 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
                   width: double.infinity,
                   decoration: Style.gradientDecoration,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 68.0),
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Text(
                       titleData[step].toString(),
                       style: TextStyle(
@@ -387,190 +395,259 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          height: 50.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () => prevStep(),
-                                child: Container(
-                                  width: 60.0,
-                                  height: 40.0,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Icon(
-                                          Icons.arrow_back_ios,
-                                          color: Color(0xFFD9D9D9),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 60.0),
+                          child: Column(
+                            children: [
+                              Card(
+                                elevation: Style.cardElevation,
+                                shape: Style.shapeCard,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 32.0,
+                                      left: 10.0,
+                                      right: 10.0,
+                                      bottom: 40.0),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: step == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        addflightNumberField =
+                                                            true;
+
+                                                        nextStep();
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Palette
+                                                              .primaryColor,
+                                                          width: 2.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(10.0),
+                                                        ),
+                                                        color:
+                                                            Color(0xFFEFF0F1),
+                                                      ),
+                                                      height: 95.0,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Only accept parcels from \n senders on the same flight you\n are",
+                                                          style: TextStyle(
+                                                            fontSize: 18.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15.0,
+                                                  ),
+                                                  Text(
+                                                    "Or",
+                                                    style: TextStyle(
+                                                      fontSize: 25.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          Palette.primaryColor,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15.0,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () => nextStep(),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Palette
+                                                              .primaryColor,
+                                                          width: 2.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(10.0),
+                                                        ),
+                                                        color:
+                                                            Color(0xFFEFF0F1),
+                                                      ),
+                                                      height: 95.0,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Parcels from Any  LuggIn\n Sender",
+                                                          style: TextStyle(
+                                                            fontSize: 18.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : step == 2
+                                                ? buildDepartureInfoWidget(
+                                                    context)
+                                                : step == 3
+                                                    ? buildGoingInfoWidget(
+                                                        context)
+                                                    : step == 4
+                                                        ? buildDepartureTimeInfoWidget(
+                                                            context)
+                                                        : step == 5
+                                                            ? buildArrivingTimeInfoWidget(
+                                                                context)
+                                                            : step == 6
+                                                                ? buildOfferKilosInfoWidget()
+                                                                : step == 7
+                                                                    ? buildPreviewWidget(
+                                                                        context)
+                                                                    : step == 8
+                                                                        ? buildDescriptionPostWidget(
+                                                                            context)
+                                                                        : null,
+                                      ),
+                                      SizedBox(
+                                        height: 15.0,
+                                      ),
+                                      Container(
+                                        height: 50.0,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            InkWell(
+                                              onTap: () => prevStep(),
+                                              child: step > 1
+                                                  ? Container(
+                                                      width: 60.0,
+                                                      height: 40.0,
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .arrow_back_ios,
+                                                              color: Palette
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            "Back",
+                                                            style: TextStyle(
+                                                              color: Palette
+                                                                  .primaryColor,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ),
+                                            Container(
+                                              height: 40.0,
+                                              child: (step != 8 && step != 1)
+                                                  ? InkWell(
+                                                      onTap: () => nextStep(),
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "Next",
+                                                            style: TextStyle(
+                                                              color: Palette
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .arrow_forward_ios,
+                                                              color: Palette
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : step == 8
+                                                      ? InkWell(
+                                                          onTap: () => !isLoard
+                                                              ? _saveTrip()
+                                                              : null,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  100.0),
+                                                            ),
+                                                            child: Container(
+                                                              color: Palette
+                                                                  .primaryColor,
+                                                              height: 50.0,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        10.0),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    !isLoard
+                                                                        ? "Post Trip"
+                                                                        : "please wait...",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : null,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Text(
-                                        "Back",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      )
                                     ],
                                   ),
                                 ),
                               ),
-                              CircleAvatar(
-                                radius: 24.0,
-                                backgroundColor: Colors.white10,
-                                child: CircleAvatar(
-                                  radius: 19.0,
-                                  backgroundColor: Colors.white12,
-                                  child: Text(
-                                    step.toString() +
-                                        '/' +
-                                        (titleData.length - 1).toString(),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              )
                             ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 60.0),
-                          child: Card(
-                            elevation: Style.cardElevation,
-                            shape: Style.shapeCard,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32.0,
-                                  left: 10.0,
-                                  right: 10.0,
-                                  bottom: 40.0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: step == 1
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                addflightNumberField = true;
-
-                                                nextStep();
-                                              });
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Palette.primaryColor,
-                                                  width: 2.0,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0),
-                                                ),
-                                                color: Color(0xFFEFF0F1),
-                                              ),
-                                              height: 95.0,
-                                              child: Center(
-                                                child: Text(
-                                                  "Only accept parcels from \n senders on the same flight you\n are",
-                                                  style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 15.0,
-                                          ),
-                                          Text(
-                                            "Or",
-                                            style: TextStyle(
-                                              fontSize: 25.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Palette.primaryColor,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 15.0,
-                                          ),
-                                          InkWell(
-                                            onTap: () => nextStep(),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: Palette.primaryColor,
-                                                  width: 2.0,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0),
-                                                ),
-                                                color: Color(0xFFEFF0F1),
-                                              ),
-                                              height: 95.0,
-                                              child: Center(
-                                                child: Text(
-                                                  "Parcels from Any  LuggIn\n Sender",
-                                                  style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : step == 2
-                                        ? buildDepartureInfoWidget(context)
-                                        : step == 3
-                                            ? buildGoingInfoWidget(context)
-                                            : step == 4
-                                                ? buildDepartureTimeInfoWidget(
-                                                    context)
-                                                : step == 5
-                                                    ? buildArrivingTimeInfoWidget(
-                                                        context)
-                                                    : step == 6
-                                                        ? buildOfferKilosInfoWidget()
-                                                        : step == 7
-                                                            ? buildPreviewWidget(
-                                                                context)
-                                                            : step == 8
-                                                                ? buildDescriptionPostWidget(
-                                                                    context)
-                                                                : null,
-                              ),
-                            ),
                           ),
                         ),
                         SizedBox(
                           height: 60.0,
                         ),
-                        Container(
-                          child: (step != 8 && step != 1 && step != 7)
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () => nextStep(),
-                                      child: CircleAvatar(
-                                        radius: 25.0,
-                                        backgroundColor: Palette.primaryColor,
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              : null,
-                        )
                       ],
                     ),
                   ),
@@ -1017,20 +1094,6 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      InkWell(
-                        onTap: () => setStep(6),
-                        child: CircleAvatar(
-                          radius: 15.0,
-                          backgroundColor: Colors.white.withOpacity(0.5),
-                          child: Icon(
-                            Icons.create,
-                            size: 20.0,
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ],
@@ -1198,17 +1261,6 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
             ),
           ],
         ),
-        InkWell(
-          onTap: () => nextStep(),
-          child: CircleAvatar(
-            radius: 25.0,
-            backgroundColor: Palette.primaryColor,
-            child: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white,
-            ),
-          ),
-        )
       ],
     );
   }
@@ -1218,54 +1270,39 @@ class _TakeParcelPageState extends State<TakeParcelPage> {
       children: <Widget>[
         buildErrMessage(context),
         Container(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color(0xFFEFF0F1),
-              borderRadius: BorderRadius.circular(20.0),
+          decoration: BoxDecoration(
+            color: Color(0xFFEFF0F1),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: TextField(
+            controller: _parcelDescription,
+            maxLines: 5,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontStyle: FontStyle.italic,
             ),
-            child: TextField(
-              controller: _parcelDescription,
-              maxLines: 5,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                hintText:
-                    'Enter information to be added for the journey, place and time of appointments, packages accepted (type, details or whole package etc.) delivery terms  and conditions',
-                border: InputBorder.none,
-              ),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+              hintText:
+                  'Enter information to be added for the journey, packages accepted (type, details or whole package etc.) delivery terms  and conditions',
+              border: InputBorder.none,
             ),
           ),
         ),
         SizedBox(
-          height: 20.0,
+          height: 5.0,
         ),
-        InkWell(
-          onTap: () => !isLoard ? _saveTrip() : null,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(100.0),
-            ),
-            child: Container(
-              color: Palette.primaryColor,
-              width: 120.0,
-              height: 50.0,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Text(
-                    !isLoard ? "Post the trip" : "Please wait...",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        ListTile(
+          title: Text("Automatic acceptance"),
+          onTap: () => autoValidateReservation(),
+          trailing: Icon(
+            !autoValidate ? Icons.toggle_off: Icons.toggle_on ,
+            size: 35.0,
+            color:!autoValidate ? null : Palette.primaryColor,
           ),
+        ),
+        SizedBox(
+          height: 20.0,
         ),
       ],
     );
@@ -1297,6 +1334,13 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
         child: Scaffold(
           body: Column(
             children: <Widget>[
+              SizedBox(
+                height: 30.0,
+              ),
+              Image.asset(
+                "assets/images/luggin-text.jpg",
+                width: 120.0,
+              ),
               Container(
                 height: 200.0,
                 child: Padding(
@@ -1330,7 +1374,9 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
                           onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (conext) => TabsScreen(),
+                              builder: (conext) => TabsScreen(
+                                selectedPage: 2,
+                              ),
                             ),
                           ),
                           child: Image.asset(
@@ -1354,7 +1400,9 @@ class _SaveTripSuccessWidgetState extends State<SaveTripSuccessWidget> {
                         onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (conext) => TabsScreen(),
+                            builder: (conext) => TabsScreen(
+                              selectedPage: 2,
+                            ),
                           ),
                         ),
                         child: CircleAvatar(

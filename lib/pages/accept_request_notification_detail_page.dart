@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luggin/environment/environment.dart';
-import 'package:luggin/pages/user_profil_detail_page.dart';
+import 'package:luggin/pages/user_public_profil_page.dart';
 import 'package:luggin/screens/write_review_screen.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/config/palette.dart';
@@ -153,10 +153,10 @@ class _AcceptRequestNotificationDetailPageState
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    UserProfilDetails(
-                                                        responseData:
-                                                            responseData[
-                                                                'userData']),
+                                                    UserPublicProfil(
+                                                  responseData:
+                                                      responseData['userData'],
+                                                ),
                                               ),
                                             ),
                                             contentPadding: EdgeInsets.all(0.0),

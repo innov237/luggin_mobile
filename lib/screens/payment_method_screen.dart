@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
+import 'package:luggin/config/style.dart';
 import 'package:luggin/screens/payment_screen.dart';
 import 'package:luggin/services/http_service.dart';
 import 'package:luggin/services/preferences_service.dart';
+import 'package:separated_number_input_formatter/separated_number_input_formatter.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   final requestData;
@@ -24,39 +26,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   var userCashData;
   bool cashInsufficient = false;
 
-  _getuserLugginPay() async {
-    var response =
-        await httpService.getPostByKey("getUserCash", authUserData['id']);
-    setState(() {
-      userCashData = response;
-      print(userCashData);
-    });
-  }
-
-  _openPayementScreen(requestData, paymentMethod) {
-    if (requestData == null) {
-      return;
-    }
-
-    if (paymentMethod == 'lugginpay') {
-      if (requestData['price_delivery'] > userCashData['cashAmount']) {
-        setState(() {
-          cashInsufficient = true;
-        });
-        return;
-      }
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentScreen(
-          requestData: requestData,
-          paymentMethod: paymentMethod,
-        ),
-      ),
-    );
-  }
-
   getPreferencesData() {
     PreferenceStorage.getDataFormPreferences('USERDATA').then((data) {
       if (null == data) {
@@ -66,7 +35,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         var storageValue = json.decode(data);
         authUserData = storageValue;
         print(authUserData);
-        _getuserLugginPay();
       });
     });
   }
@@ -81,137 +49,250 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Payment method"),
+        appBar: AppBar(),
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 10.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Edit your payment \nmethods",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Image.asset(
+                      "assets/images/paypal.png",
+                      width: 30.0,
+                    ),
+                    title: Text("Paypal didier.bikie@gmail.com"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  Divider(),
+                  Divider(),
+                  ListTile(
+                    leading: Image.asset(
+                      "assets/images/paypal.png",
+                      width: 30.0,
+                    ),
+                    title: Text("Paypal didier.bikie@gmail.com"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  Divider(),
+                  Divider(),
+                  ListTile(
+                    leading: Image.asset(
+                      "assets/images/visa-icon.png",
+                      width: 50.0,
+                    ),
+                    title: Text("Visa 8069"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditPaymentMethod(),
+                      ),
+                    ),
+                    child: Text(
+                      "Add payment method",
+                      style: TextStyle(
+                        color: Palette.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
-        body: buildPaymentMethod(),
+      ),
+    );
+  }
+}
+
+class EditPaymentMethod extends StatefulWidget {
+  @override
+  _EditPaymentMethodState createState() => _EditPaymentMethodState();
+}
+
+class _EditPaymentMethodState extends State<EditPaymentMethod> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Add payment method",
+          ),
+        ),
+        body: buildPayementForm(),
       ),
     );
   }
 
-  Widget buildPaymentMethod() {
+  Widget buildPayementForm() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
-          InkWell(
-            onTap: () => _openPayementScreen(requestData, 'card'),
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: <Widget>[
-                    Image.asset(
-                      "assets/images/bank-card.png",
-                      height: 35.0,
+          Card(
+            color: Colors.white,
+            elevation: 0.3,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Card Number"),
+                  ),
+                  Container(
+                    decoration: Style.inputBoxDecorationRectangle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: null,
+                        maxLength: 19,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'XXXX XXXX XXXX XXXX',
+                          border: InputBorder.none,
+                          counterText: '',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          SeparatedNumberInputFormatter(4, separator: ' '),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Expiry Date"),
+                  ),
+                  Container(
+                    decoration: Style.inputBoxDecorationRectangle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: null,
+                        maxLength: 5,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'MM/YY',
+                          border: InputBorder.none,
+                          counterText: '',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          // Use with digits and separator parameters.
+                          SeparatedNumberInputFormatter(2, separator: '/'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Card Holder"),
+                  ),
+                  Container(
+                    decoration: Style.inputBoxDecorationRectangle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: null,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Ex. John innov",
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("CVV"),
+                  ),
+                  Container(
+                    decoration: Style.inputBoxDecorationRectangle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: null,
+                        maxLength: 3,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'XXX',
+                          border: InputBorder.none,
+                          counterText: '',
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 40.0,
+                    child: RaisedButton(
                       color: Palette.primaryColor,
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      "Credit card",
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          InkWell(
-            onTap: () => _openPayementScreen(requestData, 'paypal'),
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: <Widget>[
-                    Image.asset(
-                      "assets/images/paypal.png",
-                      height: 40.0,
-                    ),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Text(
-                      "Paypal",
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          InkWell(
-            onTap: () => _openPayementScreen(requestData, 'lugginpay'),
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Image.asset(
-                                "assets/images/logo2.png",
-                                height: 40.0,
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                "Luggin Pay",
-                                style: TextStyle(fontSize: 18.0),
-                              ),
-                            ],
-                          ),
+                      onPressed: () => null,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
                         ),
-                        Column(
-                          children: <Widget>[
-                            Text("Balance"),
-                            SizedBox(
-                              height: 3.0,
-                            ),
-                            Text(
-                              userCashData != null
-                                  ? userCashData['cashAmount'].toString() + "€"
-                                  : '...',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
-                    if (cashInsufficient) ...[
-                      Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Center(
-                          child: Text(
-                            "Your luggin Pay balance is insufficient",
-                            style: TextStyle(
-                              color: Color(0xFFFF5B38),
-                            ),
-                          ),
-                        ),
-                      )
-                    ]
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),

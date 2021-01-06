@@ -19,6 +19,9 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   final requestData;
   final paymentMethod;
+
+  String currentPaymentMethod = '';
+
   _PaymentScreenState(this.requestData, this.paymentMethod);
   String responseMessage = '';
 
@@ -39,27 +42,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _cardCvv = TextEditingController();
 
     print(requestData);
+
+    currentPaymentMethod = paymentMethod;
   }
 
   _validateCard() async {
-    setState(() {
-      responseMessage = '';
-      requestData['cardNumber'] = _cardNumber.text.toString();
-      requestData['cardExpiryDate'] = _cardExpiryDate.text.toString();
-      requestData['cardHolder'] = _cardHolder.text.toString();
-      requestData['cardCvv'] = _cardCvv.text.toString();
-      requestData['method'] = paymentMethod.toString();
-    });
+    // setState(() {
+    //   responseMessage = '';
+    //   requestData['cardNumber'] = _cardNumber.text.toString();
+    //   requestData['cardExpiryDate'] = _cardExpiryDate.text.toString();
+    //   requestData['cardHolder'] = _cardHolder.text.toString();
+    //   requestData['cardCvv'] = _cardCvv.text.toString();
+    //   requestData['method'] = paymentMethod.toString();
+    // });
 
-    if (_cardNumber.text.isEmpty ||
-        _cardHolder.text.isEmpty ||
-        _cardCvv.text.isEmpty ||
-        _cardExpiryDate.text.isEmpty) {
-      setState(() {
-        responseMessage = "All fields are required";
-      });
-      return;
-    }
+    // if (_cardNumber.text.isEmpty ||
+    //     _cardHolder.text.isEmpty ||
+    //     _cardCvv.text.isEmpty ||
+    //     _cardExpiryDate.text.isEmpty) {
+    //   setState(() {
+    //     responseMessage = "All fields are required";
+    //   });
+    //   return;
+    // }
+
     var response =
         await httservice.postData("sendDeliveryRequest", requestData);
 
@@ -77,175 +83,185 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
+  changePaymentMethode() {
+    if (currentPaymentMethod == 'savedCard') {
+      setState(() {
+        currentPaymentMethod = 'card';
+      });
+    } else {
+      setState(() {
+        currentPaymentMethod = 'savedCard';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: ListView(
+        appBar: AppBar(),
+        body: Column(
           children: <Widget>[
-            Stack(
-              children: [
-                Container(
-                  height: 200.0,
-                  decoration: Style.gradientDecoration,
-                ),
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 40.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "Pay " +
-                                  requestData['price_delivery'].toString() +
-                                  "€",
-                              style: TextStyle(
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            if (paymentMethod == 'card') ...[
-                              Image.asset(
-                                "assets/images/master-card.png",
-                                height: 30.0,
-                              )
-                            ],
-                            if (paymentMethod == 'paypal') ...[
-                              Image.asset(
-                                "assets/images/paypal.png",
-                                height: 30.0,
-                              )
-                            ],
-                            if (paymentMethod == 'lugginpay') ...[
-                              Image.asset(
-                                "assets/images/logo2.png",
-                                height: 30.0,
-                              )
-                            ],
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              Icons.security,
-                              color: Colors.white60,
-                              size: 15.0,
-                            ),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            Text(
-                              "You are on a secure payment server",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            Expanded(
-                              child: Container(
-                                height: 3.0,
-                                color: Colors.white60,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 130.0),
-                  child: Column(
-                    children: <Widget>[
-                      if (paymentMethod == 'card' ||
-                          paymentMethod == 'paypal') ...[
-                        buildPayementForm(),
-                      ],
-                      if (paymentMethod == 'lugginpay') ...[
-                        Card(
-                          child: Container(
-                            height: 100.0,
-                            child: Center(
-                              child: ListTile(
-                                leading: Image.asset(
-                                  "assets/images/logo2.png",
-                                  height: 30.0,
-                                ),
-                                title: Text("LugginPay"),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                      if (responseMessage != '') ...[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              responseMessage.toString(),
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: InkWell(
-                          onTap: () => !isLoard ? _validateCard() : null,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Container(
-                              color: Palette.primaryColor,
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(
-                                    !isLoard ? "Validate" : "Please waite...",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w500,
+            Expanded(
+              child: Container(
+                child: ListView(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.security,
+                                      color: Colors.white60,
+                                      size: 15.0,
                                     ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      "You are on a secure payment server",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 3.0,
+                                        color: Colors.white60,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "That's it,\nyou can pay !",
+                                  style: TextStyle(
+                                    fontSize: 25.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              if (currentPaymentMethod == 'card' ||
+                                  currentPaymentMethod == 'paypal') ...[
+                                buildPayementForm(),
+                              ],
+                              if (paymentMethod == 'lugginpay') ...[
+                                Card(
+                                  child: Container(
+                                    height: 100.0,
+                                    child: Center(
+                                      child: ListTile(
+                                        leading: Image.asset(
+                                          "assets/images/logo2.png",
+                                          height: 30.0,
+                                        ),
+                                        title: Text("LugginPay"),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                              if (currentPaymentMethod == 'savedCard') ...[
+                                buildSavePaymentScreen(),
+                              ],
+                              if (responseMessage != '') ...[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      responseMessage.toString(),
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              GestureDetector(
+                                onTap: () => changePaymentMethode(),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Use another payment method",
+                                    style: TextStyle(
+                                      color: Palette.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              height: 75.0,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: InkWell(
+                  onTap: () => !isLoard ? _validateCard() : null,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Container(
+                      color: Palette.primaryColor,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            !isLoard
+                                ? "Pay ${requestData['price_delivery']}€"
+                                    .toString()
+                                : "Please waite...",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.arrow_back, color: Colors.white),
-                  ),
-                ),
-              ],
-            )
+              ),
+            ),
           ],
         ),
       ),
@@ -378,6 +394,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSavePaymentScreen() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 0.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: Icon(
+              Icons.credit_card,
+            ),
+            title: Text(
+              "Methode de paiement enregistrée",
+            ),
+            subtitle: Text("**** *** *** 0733"),
+          ),
+          Divider(),
         ],
       ),
     );

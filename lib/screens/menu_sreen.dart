@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:luggin/config/palette.dart';
 import 'package:luggin/environment/environment.dart';
+import 'package:luggin/pages/feedback_page.dart';
+import 'package:luggin/pages/gethelp_page.dart';
 import 'package:luggin/pages/profil_verification.dart';
+import 'package:luggin/pages/reviews/reviews_list.dart';
+import 'package:luggin/pages/safety_center.dart';
 import 'package:luggin/pages/user_profil_detail_page.dart';
-import 'package:luggin/pages/user_profil_page.dart';
 import 'package:luggin/screens/auth/login/login_screen.dart';
-import 'package:luggin/screens/tabs_screen.dart';
 import 'package:luggin/services/preferences_service.dart';
 import 'package:luggin/pages/user_request_page.dart';
 import 'package:luggin/pages/user_trip_page.dart';
@@ -222,7 +224,9 @@ class _MenuScreenState extends State<MenuScreen> {
                             InkWell(
                               onTap: () => _openPage(
                                 context,
-                                UserProfilPage(),
+                                UserProfilDetails(
+                                  authUserData: authUserData,
+                                ),
                               ),
                               child: Container(
                                 child: Column(
@@ -330,24 +334,9 @@ class _MenuScreenState extends State<MenuScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       InkWell(
-                                        onTap: () => Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (conext) => TabsScreen(),
-                                          ),
-                                        ),
+                                        onTap: () => Navigator.pop(context),
                                         child: Icon(Icons.clear,
                                             color: Colors.white),
-                                      ),
-                                      InkWell(
-                                        onTap: () => _openPage(
-                                          context,
-                                          UserProfilPage(),
-                                        ),
-                                        child: Icon(
-                                          Icons.settings,
-                                          color: Colors.white,
-                                        ),
                                       ),
                                     ],
                                   ),
@@ -471,7 +460,9 @@ class _MenuScreenState extends State<MenuScreen> {
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
                                       onTap: () => _openPage(
-                                          context, NotificationSettingPage()),
+                                        context,
+                                        NotificationSettingPage(),
+                                      ),
                                       title: Row(
                                         children: <Widget>[
                                           Image.asset(
@@ -501,9 +492,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     ListTile(
                                       onTap: () => _openPage(
                                         context,
-                                        UserProfilDetails(
-                                          responseData: authUserData,
-                                        ),
+                                        ReviewsListPage(),
                                       ),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
@@ -615,6 +604,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                   children: <Widget>[
                                     ListTile(
                                       contentPadding: EdgeInsets.all(0.0),
+                                      onTap: () => _openPage(
+                                        context,
+                                        FeedBackPage(),
+                                      ),
                                       dense: true,
                                       title: Row(
                                         children: <Widget>[
@@ -643,6 +636,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                     ),
                                     Divider(),
                                     ListTile(
+                                      onTap: () => _openPage(
+                                        context,
+                                        GetHelpPage(),
+                                      ),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
                                         children: <Widget>[
@@ -671,6 +668,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                     ),
                                     Divider(),
                                     ListTile(
+                                      onTap: () => _openPage(
+                                        context,
+                                        SafetyCenter(),
+                                      ),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Row(
                                         children: <Widget>[
@@ -781,6 +782,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                           )
                                         ],
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 3.0,
+                                    ),
+                                    Center(
+                                      child: Text("version 1.0"),
                                     )
                                   ],
                                 ),

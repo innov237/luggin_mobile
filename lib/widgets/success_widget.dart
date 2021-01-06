@@ -47,7 +47,9 @@ class _SaveSuccessWidgetState extends State<SaveSuccessWidget> {
                         onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (conext) => TabsScreen(),
+                            builder: (conext) => TabsScreen(
+                              selectedPage: 2,
+                            ),
                           ),
                         ),
                         child: Image.asset(
@@ -71,7 +73,9 @@ class _SaveSuccessWidgetState extends State<SaveSuccessWidget> {
                       onTap: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (conext) => TabsScreen(),
+                          builder: (conext) => TabsScreen(
+                            selectedPage: 2,
+                          ),
                         ),
                       ),
                       child: CircleAvatar(
