@@ -113,7 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   padding: const EdgeInsets.only(left: 5.0),
                                   child: Center(
                                     child: Text(
-                                      "key-words".tr(),
+                                      "people-need-kilos".tr(),
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         color: Colors.black.withOpacity(0.7),
@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 ),
                                 Icon(
-                                  Icons.list,
+                                  Icons.search,
                                   color: Colors.black.withOpacity(0.5),
                                 )
                               ],
@@ -149,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: () => _openPage(RequestList()),
+                            onTap: () => null,
                             child: Card(
                               elevation: 0.3,
                               child: Padding(
@@ -161,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     CircleAvatar(
                                       backgroundColor: Colors.cyan,
                                       child: Icon(
-                                        Icons.airplanemode_active,
+                                        Icons.star,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -169,7 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       height: 5.0,
                                     ),
                                     Text(
-                                      "people-need-kilos".tr(),
+                                      "favourites-posts".tr(),
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -182,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         Expanded(
                           child: InkWell(
-                            onTap: () => _openPage(TripListPage()),
+                            onTap: () => null,
                             child: Card(
                               elevation: 0.3,
                               child: Padding(
@@ -203,7 +203,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ),
                                     SizedBox(
                                       child: Text(
-                                        "people-with-kilos".tr(),
+                                        "saved-searches".tr(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),

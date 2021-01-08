@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:luggin/pages/payout_page.dart';
+import 'package:luggin/pages/currency_page.dart';
 import 'package:luggin/pages/pending_transfer_page.dart';
+import 'package:luggin/pages/transfer_history_page.dart';
 import 'package:luggin/screens/payment_method_screen.dart';
-import 'package:luggin/screens/transfer_history_screen.dart';
 
 class PaymentAndPayoutPage extends StatefulWidget {
   @override
@@ -55,7 +55,11 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
-                      onTap: () => null,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TransferHistoryPage(),
+                        ),
+                      ),
                       title: Row(
                         children: <Widget>[
                           Text(
@@ -105,6 +109,12 @@ class _PaymentAndPayoutPageState extends State<PaymentAndPayoutPage> {
                       trailing: Icon(Icons.arrow_forward_ios),
                     ),
                     ListTile(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CurrencyPage(),
+                        ),
+                      ),
                       contentPadding: EdgeInsets.all(0.0),
                       title: Row(
                         children: <Widget>[
